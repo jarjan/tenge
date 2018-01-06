@@ -2,8 +2,8 @@
   <main>
     <b-navbar toggleable="sm" type="dark" variant="info">
       <b-container>
-        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
         <b-navbar-brand>Tenge 🎉</b-navbar-brand>
+        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
         <b-collapse is-nav id="nav_collapse">
          <b-navbar-nav>
            <b-nav-item>посчитай свою зарплату</b-nav-item>
@@ -21,52 +21,69 @@
         <b-col md="8">
           <h1>Введите вашу зарплату в месяц</h1>
           <b-row class="row">
-            <b-col md="6">
+            <b-col sm="5">
               <b-input-group size="lg">
-                <b-form-input v-model="salary"></b-form-input>
-                <b-input-group-addon>₸</b-input-group-addon>
-                <b-input-group-addon>
-                  <input v-model="net" type="checkbox" aria-label="На руки">
-                  На руки
-                </b-input-group-addon>
+                <b-form-input v-model="inputSalary" v-on:change="calculate"></b-form-input>
+                <div class="input-group-append">
+                  <span class="input-group-text">₸</span>
+               </div>
+              </b-input-group>
+            </b-col>
+            <b-col sm="7">
+              <b-input-group size="lg">
+                <span class="input-group-text">
+                  <b-form-checkbox size="lg" plain v-model="net" v-on:change="calculate">На руки</b-form-checkbox>
+                </span>
               </b-input-group>
             </b-col>
           </b-row>
         </b-col>
       </b-row>
       <div class="row">
-        <b-col md="4">
+        <b-col md="6">
           <h2>Расчеты</h2>
           <b-list-group>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
               Оклад
-              <b-badge variant="primary" pill>11000</b-badge>
+              <b-badge variant="primary">
+                + {{ formatResult(result.netSalary) }}
+              </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
               <span v-b-tooltip.hover title="Обязательный пенсионный взнос">
                 ОПВ
               </span>
-              <b-badge variant="primary" pill>11000</b-badge>
+              <b-badge variant="danger">
+                - {{ formatResult(result.pension) }}
+              </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
               <span v-b-tooltip.hover title="Индивидуальный подоходный налог">
                 ИПН
               </span>
-              <b-badge variant="primary" pill>11000</b-badge>
+              <b-badge variant="danger">
+                - {{ formatResult(result.tax) }}
+              </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
               <span v-b-tooltip.hover title="Доход на руки">
                 Заработная плата
               </span>
-              <b-badge variant="primary" pill>11000</b-badge>
+              <b-badge variant="success">
+                = {{ formatResult(result.salary) }}
+              </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
               Заработная плата за год
-              <b-badge variant="primary" pill>11000</b-badge>
+              <b-badge variant="info">
+                {{ formatResult(result.salary * 12) }}
+              </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
               Оклад за год
-              <b-badge variant="primary" pill>11000</b-badge>
+              <b-badge variant="info">
+                {{ formatResult(result.netSalary * 12) }}
+              </b-badge>
             </b-list-group-item>
           </b-list-group>
         </b-col>
@@ -83,21 +100,53 @@ export default {
   name: 'app',
   data () {
     return {
-      minimalSalary: 20000,
-      salary: 20000,
-      net: true,
+      currentYear: 2018,
+      minimalSalary: 28284,
+      inputSalary: 28284,
+      net: false,
       result: {
-
+        netSalary: 0,
+        pension: 0,
+        tax: 0,
+        salary: 0
       }
     }
   },
+  beforeMount () {
+    this.calculate()
+  },
   methods: {
     calculate () {
-
+      switch (this.currentYear) {
+        case 2018:
+          this.minimalSalary = 28284
+          break;
+        default:
+          this.currentYear = 2018
+          this.minimalSalary = 28284
+      }
+      if (this.net) {
+        this.result.netSalary = (this.inputSalary - this.minimalSalary * 0.1) / 0.81
+        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ? this.result.netSalary * 0.1 : this.minimalSalary * 75
+        this.result.tax = this.result.netSalary == this.minimalSalary ? 0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1
+        this.result.salary = this.inputSalary
+      } else {
+        this.result.netSalary = this.inputSalary
+        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ? this.result.netSalary * 0.1 : this.minimalSalary * 75
+        this.result.tax = this.result.netSalary == this.minimalSalary ? 0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1
+        this.result.salary = this.result.netSalary - this.result.pension - this.result.tax
+      }
+    },
+    formatResult (value) {
+      let val = (value/1).toFixed(2).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₸"
     }
   }
 }
 </script>
 
 <style>
+.input-group-text {
+  padding: .7rem .75rem;
+}
 </style>
