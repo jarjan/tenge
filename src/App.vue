@@ -1,6 +1,6 @@
 <template>
   <main>
-    <b-navbar toggleable="sm" type="dark" variant="info">
+    <b-navbar toggleable="sm" type="dark" variant="primary">
       <b-container>
         <b-navbar-brand>Tenge 🎉</b-navbar-brand>
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
@@ -26,13 +26,13 @@
                 <b-form-input v-model="inputSalary" v-on:change="calculate"></b-form-input>
                 <div class="input-group-append">
                   <span class="input-group-text">₸</span>
-               </div>
+                </div>
               </b-input-group>
             </b-col>
             <b-col sm="7">
               <b-input-group size="lg">
                 <span class="input-group-text">
-                  <b-form-checkbox size="lg" plain v-model="net" v-on:change="calculate">На руки</b-form-checkbox>
+                  <b-form-checkbox size="lg" checked plain v-model="net" v-on:change="calculate">На руки</b-form-checkbox>
                 </span>
               </b-input-group>
             </b-col>
@@ -98,7 +98,7 @@
 <script>
 export default {
   name: 'app',
-  data () {
+  data() {
     return {
       currentYear: 2018,
       minimalSalary: 28284,
@@ -108,41 +108,46 @@ export default {
         netSalary: 0,
         pension: 0,
         tax: 0,
-        salary: 0
-      }
-    }
+        salary: 0,
+      },
+    };
   },
-  beforeMount () {
-    this.calculate()
+  beforeMount() {
+    switch (this.currentYear) {
+      case 2018:
+        this.minimalSalary = 28284;
+        break;
+      default:
+        this.currentYear = 2018;
+        this.minimalSalary = 28284;
+    }
+    this.calculate();
   },
   methods: {
-    calculate () {
-      switch (this.currentYear) {
-        case 2018:
-          this.minimalSalary = 28284
-          break;
-        default:
-          this.currentYear = 2018
-          this.minimalSalary = 28284
-      }
-      if (this.net) {
-        this.result.netSalary = (this.inputSalary - this.minimalSalary * 0.1) / 0.81
-        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ? this.result.netSalary * 0.1 : this.minimalSalary * 75
-        this.result.tax = this.result.netSalary == this.minimalSalary ? 0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1
-        this.result.salary = this.inputSalary
+    calculate() {
+      if (this.net === true) {
+        this.result.netSalary = (this.inputSalary - (this.minimalSalary * 0.1)) / 0.81;
+        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
+          this.result.netSalary * 0.1 : this.minimalSalary * 75;
+        this.result.tax = this.result.netSalary === this.minimalSalary ?
+          0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
+        this.result.salary = this.inputSalary;
       } else {
-        this.result.netSalary = this.inputSalary
-        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ? this.result.netSalary * 0.1 : this.minimalSalary * 75
-        this.result.tax = this.result.netSalary == this.minimalSalary ? 0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1
-        this.result.salary = this.result.netSalary - this.result.pension - this.result.tax
+        this.result.netSalary = this.inputSalary;
+        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
+          this.result.netSalary * 0.1 : this.minimalSalary * 75;
+        this.result.tax = this.result.netSalary === this.minimalSalary ?
+          0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
+        this.result.salary = this.result.netSalary - this.result.pension - this.result.tax;
       }
     },
-    formatResult (value) {
-      let val = (value/1).toFixed(2).replace('.', ',')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₸"
-    }
-  }
-}
+    formatResult(value) {
+      let val = (value / 1).toFixed(2).replace('.', ',');
+      val += ' ₸';
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+  },
+};
 </script>
 
 <style>
