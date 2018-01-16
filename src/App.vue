@@ -32,7 +32,7 @@
             <b-col sm="7">
               <b-input-group size="lg">
                 <span class="input-group-text">
-                  <b-form-checkbox size="lg" checked plain v-model="net" v-on:change="calculate">На руки</b-form-checkbox>
+                  <b-form-checkbox size="lg" plain v-model="check" value="net" unchecked-value="gross" v-on:change="calculate">На руки</b-form-checkbox>
                 </span>
               </b-input-group>
             </b-col>
@@ -50,17 +50,17 @@
               </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
-              <span v-b-tooltip.hover title="Обязательный пенсионный взнос">
+              <abbr v-b-tooltip.hover title="Обязательный пенсионный взнос">
                 ОПВ
-              </span>
+              </abbr>
               <b-badge variant="danger">
                 - {{ formatResult(result.pension) }}
               </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
-              <span v-b-tooltip.hover title="Индивидуальный подоходный налог">
+              <abbr v-b-tooltip.hover title="Индивидуальный подоходный налог">
                 ИПН
-              </span>
+              </abbr>
               <b-badge variant="danger">
                 - {{ formatResult(result.tax) }}
               </b-badge>
@@ -77,12 +77,20 @@
               Заработная плата за год
               <b-badge variant="info">
                 {{ formatResult(result.salary * 12) }}
+                <br>
+                <small>{{ toUSD(result.salary * 12) }}</small>
+                |
+                <small>{{ toEUR(result.salary * 12) }}</small>
               </b-badge>
             </b-list-group-item>
             <b-list-group-item  class="d-flex justify-content-between align-items-center">
               Оклад за год
               <b-badge variant="info">
                 {{ formatResult(result.netSalary * 12) }}
+                <br>
+                <small>{{ toUSD(result.netSalary * 12) }}</small>
+                |
+                <small>{{ toEUR(result.netSalary * 12) }}</small>
               </b-badge>
             </b-list-group-item>
           </b-list-group>
@@ -103,7 +111,7 @@ export default {
       currentYear: 2018,
       minimalSalary: 28284,
       inputSalary: 28284,
-      net: false,
+      check: 'gross',
       result: {
         netSalary: 0,
         pension: 0,
@@ -111,6 +119,13 @@ export default {
         salary: 0,
       },
     };
+  },
+  computed: {
+    rate() {
+      fetch('https://data.egov.kz/api/v2/valutalar_bagamdary4/v240')
+        .then(response => response.json())
+        .then(data => data);
+    },
   },
   beforeMount() {
     switch (this.currentYear) {
@@ -125,14 +140,14 @@ export default {
   },
   methods: {
     calculate() {
-      if (this.net === true) {
+      if (this.check === 'net') {
         this.result.netSalary = (this.inputSalary - (this.minimalSalary * 0.1)) / 0.81;
         this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
           this.result.netSalary * 0.1 : this.minimalSalary * 75;
         this.result.tax = this.result.netSalary === this.minimalSalary ?
           0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
         this.result.salary = this.inputSalary;
-      } else {
+      } else if (this.check === 'gross') {
         this.result.netSalary = this.inputSalary;
         this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
           this.result.netSalary * 0.1 : this.minimalSalary * 75;
@@ -144,6 +159,18 @@ export default {
     formatResult(value) {
       let val = (value / 1).toFixed(2).replace('.', ',');
       val += ' ₸';
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+    toUSD(salary) {
+      let val = parseInt(salary, 10) / 330;
+      val = (val / 1).toFixed(0).replace('.', ',');
+      val = `$${val}`;
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+    toEUR(salary) {
+      let val = parseInt(salary, 10) / 400;
+      val = (val / 1).toFixed(0).replace('.', ',');
+      val = `${val}€`;
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
   },
