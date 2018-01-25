@@ -101,8 +101,29 @@
           <div class="ya-share2" data-services="vkontakte,facebook,twitter,linkedin,whatsapp,telegram" data-counter=""></div>
           -->
         </b-col>
-        <b-col md="4">
-          <!-- Фильтры -->
+        <b-col md="4" class="text-light">
+          <share-facebook
+            title_social="Facebook"
+            has_counter
+            has_icon
+          ></share-facebook>
+          <share-vkontakte
+            title_social="VK.com"
+            has_counter
+            has_icon
+          ></share-vkontakte>
+          <share-twitter
+            title_social="Twitter"
+            has_icon
+          ></share-twitter>
+          <share-telegram
+            title_social="Telegram"
+            has_icon
+          ></share-telegram>
+          <share-whatsapp
+            title_social="WhatsApp"
+            has_icon
+          ></share-whatsapp>
         </b-col>
       </div>
     </b-container>
@@ -110,8 +131,21 @@
 </template>
 
 <script>
+import ShareFacebook from 'vue-goodshare/src/providers/Facebook';
+import ShareTwitter from 'vue-goodshare/src/providers/Twitter';
+import ShareVkontakte from 'vue-goodshare/src/providers/Vkontakte';
+import ShareTelegram from 'vue-goodshare/src/providers/Telegram';
+import ShareWhatsapp from 'vue-goodshare/src/providers/WhatsApp';
+
 export default {
   name: 'app',
+  components: {
+    ShareFacebook,
+    ShareTwitter,
+    ShareVkontakte,
+    ShareTelegram,
+    ShareWhatsapp,
+  },
   data() {
     return {
       currentYear: 2018,
