@@ -19,10 +19,10 @@
     <b-container>
       <b-row>
         <b-col md="8">
-          <h1>Введите вашу зарплату в месяц</h1>
+          <h2>Введите вашу зарплату в месяц</h2>
           <!-- {{ rate }} -->
           <b-row class="row">
-            <b-col sm="5">
+            <b-col sm="5" cols="7">
               <b-input-group size="lg">
                 <b-form-input v-model="inputSalary" v-on:change="calculate"></b-form-input>
                 <div class="input-group-append">
@@ -30,7 +30,7 @@
                 </div>
               </b-input-group>
             </b-col>
-            <b-col sm="7">
+            <b-col sm="7" cols="5">
               <b-input-group size="lg">
                 <span class="input-group-text">
                   <b-form-checkbox size="lg" plain v-model="check" value="gross" unchecked-value="net" v-on:change="calculate">На руки</b-form-checkbox>

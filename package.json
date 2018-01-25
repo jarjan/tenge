@@ -1,6 +1,6 @@
 {
   "name": "tenge.party",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Calculate your tenge salary",
   "author": "Zharzhan Kulmyrza <zharzhan@gmail.com>",
   "private": true,
