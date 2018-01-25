@@ -20,7 +20,7 @@
       <b-row>
         <b-col md="8">
           <h1>Введите вашу зарплату в месяц</h1>
-          {{ rate }}
+          <!-- {{ rate }} -->
           <b-row class="row">
             <b-col sm="5">
               <b-input-group size="lg">
@@ -123,7 +123,7 @@ export default {
   },
   computed: {
     rate() {
-      const rateData = {'usd': 321, 'eur': 396};
+      const rateData = { usd: 321, eur: 396 };
       return rateData;
     },
   },
