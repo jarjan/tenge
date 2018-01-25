@@ -33,7 +33,7 @@
             <b-col sm="7">
               <b-input-group size="lg">
                 <span class="input-group-text">
-                  <b-form-checkbox size="lg" plain v-model="check" value="net" unchecked-value="gross" v-on:change="calculate">На руки</b-form-checkbox>
+                  <b-form-checkbox size="lg" plain v-model="check" value="gross" unchecked-value="net" v-on:change="calculate">На руки</b-form-checkbox>
                 </span>
               </b-input-group>
             </b-col>
@@ -159,18 +159,22 @@ export default {
   methods: {
     calculate() {
       if (this.check === 'net') {
+        this.check = 'gross';
         this.result.netSalary = (this.inputSalary - (this.minimalSalary * 0.1)) / 0.81;
         this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
           this.result.netSalary * 0.1 : this.minimalSalary * 75;
         this.result.tax = this.result.netSalary === this.minimalSalary ?
           0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
+        this.result.tax += 0;
         this.result.salary = this.inputSalary;
       } else if (this.check === 'gross') {
+        this.check = 'net';
         this.result.netSalary = this.inputSalary;
         this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
           this.result.netSalary * 0.1 : this.minimalSalary * 75;
         this.result.tax = this.result.netSalary === this.minimalSalary ?
           0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
+        this.result.tax += 0;
         this.result.salary = this.result.netSalary - this.result.pension - this.result.tax;
       }
     },
