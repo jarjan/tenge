@@ -20,6 +20,7 @@
       <b-row>
         <b-col md="8">
           <h1>Введите вашу зарплату в месяц</h1>
+          {{ rate }}
           <b-row class="row">
             <b-col sm="5">
               <b-input-group size="lg">
@@ -122,9 +123,8 @@ export default {
   },
   computed: {
     rate() {
-      fetch('https://data.egov.kz/api/v2/valutalar_bagamdary4/v240')
-        .then(response => response.json())
-        .then(data => data);
+      const rateData = {'usd': 321, 'eur': 396};
+      return rateData;
     },
   },
   beforeMount() {
@@ -137,6 +137,11 @@ export default {
         this.minimalSalary = 28284;
     }
     this.calculate();
+    fetch('http://www.nationalbank.kz/rss/rates_all.xml')
+      .then(response => response.text())
+      .then((data) => {
+        console.log(data);
+      });
   },
   methods: {
     calculate() {
@@ -162,13 +167,13 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
     toUSD(salary) {
-      let val = parseInt(salary, 10) / 330;
+      let val = parseInt(salary, 10) / this.rate.usd;
       val = (val / 1).toFixed(0).replace('.', ',');
       val = `$${val}`;
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
     toEUR(salary) {
-      let val = parseInt(salary, 10) / 400;
+      let val = parseInt(salary, 10) / this.rate.eur;
       val = (val / 1).toFixed(0).replace('.', ',');
       val = `${val}€`;
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
