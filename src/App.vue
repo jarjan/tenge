@@ -95,6 +95,11 @@
               </b-badge>
             </b-list-group-item>
           </b-list-group>
+          <!--
+          <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+          <script src="//yastatic.net/share2/share.js"></script>
+          <div class="ya-share2" data-services="vkontakte,facebook,twitter,linkedin,whatsapp,telegram" data-counter=""></div>
+          -->
         </b-col>
         <b-col md="4">
           <!-- Фильтры -->
@@ -119,13 +124,11 @@ export default {
         tax: 0,
         salary: 0,
       },
+      rate: {
+        usd: 321,
+        eur: 396,
+      },
     };
-  },
-  computed: {
-    rate() {
-      const rateData = { usd: 321, eur: 396 };
-      return rateData;
-    },
   },
   beforeMount() {
     switch (this.currentYear) {
@@ -136,12 +139,22 @@ export default {
         this.currentYear = 2018;
         this.minimalSalary = 28284;
     }
+    const todaysDate = new Date();
+    const storedDate = new Date(localStorage.getItem('today'));
+    if (localStorage.getItem('rate') && todaysDate.setHours(0, 0, 0, 0) === storedDate.setHours(0, 0, 0, 0)) {
+      this.rate = JSON.parse(localStorage.getItem('rate'));
+    } else {
+      fetch('https://openexchangerates.org/api/latest.json?app_id=0a7936c4fdc04243a2a994352484ae28')
+        .then(response => response.json())
+        .then((data) => {
+          this.rate.usd = Math.round(data.rates.KZT * 100) / 100;
+          this.rate.eur = Math.round(this.rate.usd * data.rates.EUR * 100) / 100;
+          localStorage.setItem('today', todaysDate);
+          localStorage.setItem('rate', JSON.stringify(this.rate));
+          this.calculate();
+        });
+    }
     this.calculate();
-    fetch('http://www.nationalbank.kz/rss/rates_all.xml')
-      .then(response => response.text())
-      .then((data) => {
-        console.log(data);
-      });
   },
   methods: {
     calculate() {
