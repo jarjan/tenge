@@ -1,15 +1,17 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
-import Vue from 'vue';
-import BootstrapVue from 'bootstrap-vue';
-import App from './App';
+import "babel-polyfill";
 
-Vue.config.productionTip = false;
+import Vue from "vue";
+import App from "./App.vue";
+import "./registerServiceWorker";
+
+import BootstrapVue from "bootstrap-vue";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.use(BootstrapVue);
 
-// eslint-disable-next-line no-new
+Vue.config.productionTip = false;
+
 new Vue({
-  el: '#app',
-  render: h => h(App),
-});
+  render: h => h(App)
+}).$mount("#app");

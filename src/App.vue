@@ -132,37 +132,37 @@
 </template>
 
 <script>
-import ShareFacebook from 'vue-goodshare/src/providers/Facebook';
-import ShareTwitter from 'vue-goodshare/src/providers/Twitter';
-import ShareVkontakte from 'vue-goodshare/src/providers/Vkontakte';
-import ShareTelegram from 'vue-goodshare/src/providers/Telegram';
-import ShareWhatsapp from 'vue-goodshare/src/providers/WhatsApp';
+import ShareFacebook from "vue-goodshare/src/providers/Facebook";
+import ShareTwitter from "vue-goodshare/src/providers/Twitter";
+import ShareVkontakte from "vue-goodshare/src/providers/Vkontakte";
+import ShareTelegram from "vue-goodshare/src/providers/Telegram";
+import ShareWhatsapp from "vue-goodshare/src/providers/WhatsApp";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     ShareFacebook,
     ShareTwitter,
     ShareVkontakte,
     ShareTelegram,
-    ShareWhatsapp,
+    ShareWhatsapp
   },
   data() {
     return {
       currentYear: 2018,
       minimalSalary: 28284,
       inputSalary: 28284,
-      check: 'gross',
+      check: "gross",
       result: {
         netSalary: 0,
         pension: 0,
         tax: 0,
-        salary: 0,
+        salary: 0
       },
       rate: {
         usd: 321,
-        eur: 396,
-      },
+        eur: 396
+      }
     };
   },
   beforeMount() {
@@ -175,17 +175,22 @@ export default {
         this.minimalSalary = 28284;
     }
     const todaysDate = new Date();
-    const storedDate = new Date(localStorage.getItem('today'));
-    if (localStorage.getItem('rate') && todaysDate.setHours(0, 0, 0, 0) === storedDate.setHours(0, 0, 0, 0)) {
-      this.rate = JSON.parse(localStorage.getItem('rate'));
+    const storedDate = new Date(localStorage.getItem("today"));
+    if (
+      localStorage.getItem("rate") &&
+      todaysDate.setHours(0, 0, 0, 0) === storedDate.setHours(0, 0, 0, 0)
+    ) {
+      this.rate = JSON.parse(localStorage.getItem("rate"));
     } else {
-      fetch('https://openexchangerates.org/api/latest.json?app_id=0a7936c4fdc04243a2a994352484ae28')
+      const apiUrl =
+        "https://openexchangerates.org/api/latest.json?app_id=0a7936c4fdc04243a2a994352484ae28";
+      fetch(apiUrl)
         .then(response => response.json())
-        .then((data) => {
+        .then(data => {
           this.rate.usd = Math.round(data.rates.KZT * 100) / 100;
           this.rate.eur = Math.round(this.rate.usd / data.rates.EUR);
-          localStorage.setItem('today', todaysDate);
-          localStorage.setItem('rate', JSON.stringify(this.rate));
+          localStorage.setItem("today", todaysDate);
+          localStorage.setItem("rate", JSON.stringify(this.rate));
           this.calculate();
         });
     }
@@ -193,49 +198,57 @@ export default {
   },
   methods: {
     calculate() {
-      if (this.check === 'net') {
-        this.check = 'gross';
-        this.result.netSalary = (this.inputSalary - (this.minimalSalary * 0.1)) / 0.81;
-        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
-          this.result.netSalary * 0.1 : this.minimalSalary * 75;
-        this.result.tax = this.result.netSalary === this.minimalSalary ?
-          0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
+      if (this.check === "net") {
+        this.check = "gross";
+        this.result.netSalary = (this.inputSalary - this.minimalSalary * 0.1) / 0.81;
+        this.result.pension =
+          this.result.netSalary * 0.1 < this.minimalSalary * 75
+            ? this.result.netSalary * 0.1
+            : this.minimalSalary * 75;
+        this.result.tax =
+          this.result.netSalary === this.minimalSalary
+            ? 0
+            : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
         this.result.tax += 0;
         this.result.salary = this.inputSalary;
-      } else if (this.check === 'gross') {
-        this.check = 'net';
+      } else if (this.check === "gross") {
+        this.check = "net";
         this.result.netSalary = this.inputSalary;
-        this.result.pension = this.result.netSalary * 0.1 < this.minimalSalary * 75 ?
-          this.result.netSalary * 0.1 : this.minimalSalary * 75;
-        this.result.tax = this.result.netSalary === this.minimalSalary ?
-          0 : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
+        this.result.pension =
+          this.result.netSalary * 0.1 < this.minimalSalary * 75
+            ? this.result.netSalary * 0.1
+            : this.minimalSalary * 75;
+        this.result.tax =
+          this.result.netSalary === this.minimalSalary
+            ? 0
+            : (this.result.netSalary - this.result.pension - this.minimalSalary) * 0.1;
         this.result.tax += 0;
         this.result.salary = this.result.netSalary - this.result.pension - this.result.tax;
       }
     },
     formatResult(value) {
-      let val = (value / 1).toFixed(2).replace('.', ',');
-      val += ' ₸';
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      let val = (Math.abs(value) / 1).toFixed(2).replace(".", ",");
+      val += " ₸";
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     },
     toUSD(salary) {
       let val = parseInt(salary, 10) / this.rate.usd;
-      val = (val / 1).toFixed(0).replace('.', ',');
+      val = (val / 1).toFixed(0).replace(".", ",");
       val = `$${val}`;
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     },
     toEUR(salary) {
       let val = parseInt(salary, 10) / this.rate.eur;
-      val = (val / 1).toFixed(0).replace('.', ',');
+      val = (val / 1).toFixed(0).replace(".", ",");
       val = `${val}€`;
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-  },
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+  }
 };
 </script>
 
 <style>
 .input-group-text {
-  padding: .7rem .75rem;
+  padding: 0.7rem 0.75rem;
 }
 </style>
