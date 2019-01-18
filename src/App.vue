@@ -141,8 +141,8 @@ export default {
   data() {
     return {
       currentYear: 2019,
-      minimalSalary: 28284,
-      inputSalary: 28284,
+      minimalSalary: 42500,
+      inputSalary: 42500,
       check: "gross",
       result: {
         netSalary: 0,
