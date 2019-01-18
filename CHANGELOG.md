@@ -2,6 +2,11 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.1
+
+- Update to 2019
+- Update dependencies
+
 ## 0.3.0
 
 - Move to vue-cli 3

@@ -1,6 +1,6 @@
 {
   "name": "tenge.party",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Calculate your tenge salary",
   "author": "Zharzhan Kulmyrza <zharzhan@gmail.com>",
   "private": true,
@@ -13,17 +13,17 @@
     "babel-polyfill": "^6.26.0",
     "bootstrap-vue": "^2.0.0-rc.11",
     "register-service-worker": "^1.5.2",
-    "vue": "^2.5.17",
+    "vue": "^2.5.22",
     "vue-goodshare": "^1.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.1",
-    "@vue/cli-plugin-eslint": "^3.0.1",
-    "@vue/cli-plugin-pwa": "^3.0.1",
-    "@vue/cli-service": "^3.0.1",
-    "@vue/eslint-config-prettier": "^3.0.1",
-    "node-sass": "^4.9.3",
+    "@vue/cli-plugin-babel": "^3.3.0",
+    "@vue/cli-plugin-eslint": "^3.3.0",
+    "@vue/cli-plugin-pwa": "^3.3.0",
+    "@vue/cli-service": "^3.3.0",
+    "@vue/eslint-config-prettier": "^4.0.1",
+    "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.22"
   }
 }
