@@ -27,7 +27,7 @@
   font-size: inherit;
   border-radius: 0.2em;
   padding: 0.3em 0.5em;
-  max-width: 200px;
+  max-width: 6em;
   background: rgba(255, 255, 255, 0.8);
 }
 
@@ -45,6 +45,7 @@
   text-align: left;
   clear: both;
   overflow: auto;
+  padding: 0 1em;
 }
 .App-list > dt {
   float: left;
@@ -55,5 +56,5 @@
 }
  
 .App-link {
-  color: #4DBA87;
+  color: #007bff;
 }
