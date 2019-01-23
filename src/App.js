@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
+
+import { getSalaryInfo } from './calculator';
 import './App.css';
 
 class App extends Component {
+  state = {
+    year: new Date().getFullYear(),
+    salary: 52000,
+    net: true,
+  };
+
   render() {
+    const { salary, year, net } = this.state;
+    const { netSalary, pension, tax, grossSalary } = getSalaryInfo(
+      salary,
+      year,
+      net,
+    );
     return (
       <div className="App">
         <header className="App-header">
@@ -27,26 +41,26 @@ class App extends Component {
           <hr />
           <dl className="App-list">
             <dt>Оклад:</dt>
-            <dd>–</dd>
+            <dd>{netSalary}</dd>
 
             <dt>
               <abbr title="Обязательный пенсионный взнос">ОПВ</abbr>:
             </dt>
-            <dd>–</dd>
+            <dd>{pension}</dd>
 
             <dt>
               <abbr title="Индивидуальный подоходный налог">ИПН</abbr>:
             </dt>
-            <dd>–</dd>
+            <dd>{tax}</dd>
 
             <dt>Заработная плата в месяц:</dt>
-            <dd>–</dd>
+            <dd>{grossSalary}</dd>
 
             <dt>Заработная плата за год:</dt>
-            <dd>–</dd>
+            <dd>{grossSalary * 12}</dd>
 
             <dt>Оклад за год:</dt>
-            <dd>–</dd>
+            <dd>{netSalary * 12}</dd>
           </dl>
           <hr />
         </main>
@@ -63,7 +77,7 @@ class App extends Component {
             </a>
           </p>
           <small>
-            Калькулятор делает примерные расчеты, уточняйте всё у бухгалетра.
+            Калькулятор делает примерные расчеты, уточняйте всё у бухгалтера.
           </small>
         </footer>
       </div>
