@@ -10,6 +10,12 @@ class App extends Component {
     net: true,
   };
 
+  handleChange = (event) => {
+    const { id, value } = event.target;
+
+    this.setState({ [id]: value });
+  };
+
   render() {
     const { salary, year, net } = this.state;
     const { netSalary, pension, tax, grossSalary } = getSalaryInfo(
@@ -17,6 +23,7 @@ class App extends Component {
       year,
       net,
     );
+
     return (
       <div className="App">
         <header className="App-header">
@@ -32,11 +39,24 @@ class App extends Component {
         <main className="App-content">
           <p>Введите свою заработную плату в месяц в теңге:</p>
           <section className="App-form">
-            <input className="App-input" type="text" /> ₸
+            <input
+              className="App-input"
+              type="text"
+              id="salary"
+              value={salary}
+              onChange={this.handleChange}
+            />{' '}
+            ₸
             <label className="App-label" htmlFor="net">
               На руки
             </label>
-            <input className="App-checkbox" type="checkbox" id="net" />
+            <input
+              className="App-checkbox"
+              type="checkbox"
+              id="net"
+              defaultValue={net}
+              onChange={this.handleChange}
+            />
           </section>
           <hr />
           <dl className="App-list">
