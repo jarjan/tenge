@@ -3,6 +3,7 @@
   "version": "0.3.1",
   "description": "Calculate your tenge salary",
   "author": "Zharzhan Kulmyrza <zharzhan@gmail.com>",
+  "homepage": "https://tenge.party",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
