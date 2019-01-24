@@ -3,13 +3,16 @@ const MIN_SALARY = {
   '2019': 42500,
 };
 
+const round = (number) => Math.round(100 * number) / 100;
+
 const getPension = (netSalary, minSalary) =>
-  netSalary * 0.1 < minSalary * 75 ? netSalary * 0.1 : minSalary * 75;
+  round(netSalary * 0.1 < minSalary * 75 ? netSalary * 0.1 : minSalary * 75);
 
 const getTax = (netSalary, minSalary, pension) =>
-  netSalary === minSalary ? 0 : (netSalary - pension - minSalary) * 0.1;
+  round(netSalary === minSalary ? 0 : (netSalary - pension - minSalary) * 0.1);
 
-const getGrossSalary = (netSalary, pension, tax) => netSalary - pension - tax;
+const getGrossSalary = (netSalary, pension, tax) =>
+  round(netSalary - pension - tax);
 
 export const getSalaryInfo = (salary, year = 2019, net = true) => {
   const minSalary = MIN_SALARY[year];

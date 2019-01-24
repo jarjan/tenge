@@ -41,7 +41,9 @@ class App extends Component {
           <section className="App-form">
             <input
               className="App-input"
-              type="text"
+              type="number"
+              min="1"
+              step="any"
               id="salary"
               value={salary}
               onChange={this.handleChange}
