@@ -47,7 +47,7 @@
   clear: both;
   overflow: auto;
   padding: 0 1em;
-  max-width: 520px;
+  max-width: 600px;
 }
 .App-list > dt {
   float: left;
