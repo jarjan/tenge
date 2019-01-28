@@ -1,18 +1,16 @@
-const MIN_SALARY = {
+export const MIN_SALARY = {
   '2018': 28284,
   '2019': 42500,
 };
 
-const round = (number) => Math.round(100 * number) / 100;
+export const getPension = (netSalary, minSalary) =>
+  netSalary * 0.1 < minSalary * 75 ? netSalary * 0.1 : minSalary * 75;
 
-const getPension = (netSalary, minSalary) =>
-  round(netSalary * 0.1 < minSalary * 75 ? netSalary * 0.1 : minSalary * 75);
+export const getTax = (netSalary, minSalary, pension) =>
+  netSalary === minSalary ? 0 : (netSalary - pension - minSalary) * 0.1;
 
-const getTax = (netSalary, minSalary, pension) =>
-  round(netSalary === minSalary ? 0 : (netSalary - pension - minSalary) * 0.1);
-
-const getGrossSalary = (netSalary, pension, tax) =>
-  round(netSalary - pension - tax);
+export const getGrossSalary = (netSalary, pension, tax) =>
+  netSalary - pension - tax;
 
 export const getSalaryInfo = (salary, year = 2019, net = true) => {
   const minSalary = MIN_SALARY[year];
@@ -23,3 +21,6 @@ export const getSalaryInfo = (salary, year = 2019, net = true) => {
 
   return { netSalary, pension, tax, grossSalary };
 };
+
+export const round = (number) =>
+  number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + ' ₸';

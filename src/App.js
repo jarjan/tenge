@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getSalaryInfo } from './calculator';
+import { getSalaryInfo, round } from './calculator';
 import './App.css';
 
 class App extends Component {
@@ -10,10 +10,17 @@ class App extends Component {
     net: true,
   };
 
-  handleChange = (event) => {
-    const { id, value } = event.target;
+  handleInputChange = (event) => {
+    const { id, value, ...args } = event.target;
+    console.log(args);
 
     this.setState({ [id]: value });
+  };
+
+  handleCheckboxChange = (event) => {
+    const { id, checked } = event.target;
+
+    this.setState({ [id]: checked });
   };
 
   render() {
@@ -42,13 +49,12 @@ class App extends Component {
             <input
               className="App-input"
               type="number"
-              min="1"
+              min="52000"
               step="any"
               id="salary"
               value={salary}
-              onChange={this.handleChange}
-            />{' '}
-            ₸
+              onChange={this.handleInputChange}
+            />
             <label className="App-label" htmlFor="net">
               На руки
             </label>
@@ -56,33 +62,33 @@ class App extends Component {
               className="App-checkbox"
               type="checkbox"
               id="net"
-              defaultValue={net}
-              onChange={this.handleChange}
+              checked={net}
+              onChange={this.handleCheckboxChange}
             />
           </section>
           <hr />
           <dl className="App-list">
             <dt>Оклад:</dt>
-            <dd>{netSalary}</dd>
+            <dd>{round(netSalary)}</dd>
 
             <dt>
               <abbr title="Обязательный пенсионный взнос">ОПВ</abbr>:
             </dt>
-            <dd>{pension}</dd>
+            <dd>{round(pension)}</dd>
 
             <dt>
               <abbr title="Индивидуальный подоходный налог">ИПН</abbr>:
             </dt>
-            <dd>{tax}</dd>
+            <dd>{round(tax)}</dd>
 
             <dt>Заработная плата в месяц:</dt>
-            <dd>{grossSalary}</dd>
+            <dd>{round(grossSalary)}</dd>
 
             <dt>Заработная плата за год:</dt>
-            <dd>{grossSalary * 12}</dd>
+            <dd>{round(grossSalary * 12)}</dd>
 
             <dt>Оклад за год:</dt>
-            <dd>{netSalary * 12}</dd>
+            <dd>{round(netSalary * 12)}</dd>
           </dl>
           <hr />
         </main>
