@@ -12,7 +12,7 @@ class App extends Component {
 
   handleInputChange = (event) => {
     const { id, value, ...args } = event.target;
-    console.log(args);
+    // console.log(value);
 
     this.setState({ [id]: value });
   };

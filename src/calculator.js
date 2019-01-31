@@ -23,4 +23,4 @@ export const getSalaryInfo = (salary, year = 2019, net = true) => {
 };
 
 export const round = (number) =>
-  number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + ' ₸';
+  Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + ' ₸';
