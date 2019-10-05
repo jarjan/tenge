@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 0.3.2
 
 - Adjust style for mobile devices (#14)
-- Update dependencies
+- Update dependencies (#16)
 
 ## 0.3.1
 
