@@ -55,6 +55,7 @@ class App extends Component {
                 id="salary"
                 value={salary}
                 onChange={this.handleInputChange}
+                autoFocus
               />
               <label className="App-label" htmlFor="net">
                 На руки
