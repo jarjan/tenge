@@ -68,32 +68,41 @@ class App extends Component {
                 onChange={this.handleCheckboxChange}
               />
             </section>
-          </section>
-          <hr />
-          <dl className="App-list">
-            <dt>Оклад:</dt>
-            <dd>{round(netSalary)}</dd>
-
-            <dt>
-              <abbr title="Обязательный пенсионный взнос">ОПВ</abbr>:
-            </dt>
-            <dd>{round(pension)}</dd>
-
-            <dt>
-              <abbr title="Индивидуальный подоходный налог">ИПН</abbr>:
-            </dt>
-            <dd>{round(tax)}</dd>
-
-            <dt>Заработная плата в месяц:</dt>
-            <dd>{round(grossSalary)}</dd>
-
-            <dt>Заработная плата за год:</dt>
-            <dd>{round(grossSalary * 12)}</dd>
-
-            <dt>Оклад за год:</dt>
-            <dd>{round(netSalary * 12)}</dd>
-          </dl>
-          <hr />
+          </section>          
+          <table className="App-list">
+            <tbody>  
+              <tr className="App-row">
+                <td>
+                  <p>Оклад</p>
+                  <p>{round(netSalary)}</p>
+                </td>
+                <td>
+                  <p className="App-list-right"><abbr title="Обязательный пенсионный взнос">ОПВ</abbr></p>
+                  <p className="App-list1 App-list-right">{round(pension)}</p>
+                </td>
+              </tr>
+              <tr className="App-row">
+                <td>
+                  <p><abbr title="Индивидуальный подоходный налог">ИПН</abbr></p>
+                  <p className="App-list1">{round(tax)}</p>
+                </td>
+                <td>
+                  <p className="App-list-right">Заработная плата в месяц</p>
+                  <p  className="App-list2 App-list-right">{round(grossSalary)}</p>
+                </td>
+              </tr>
+              <tr className="App-row">
+                <td>
+                  <p>Заработная плата за год</p>
+                  <p className="App-list3">{round(grossSalary * 12)}</p>
+                </td>
+                <td>
+                  <p className="App-list-right">Оклад за год</p>
+                  <p className="App-list3 App-list-right">{round(netSalary * 12)}</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </main>
         <footer className="App-footer">
           <p>

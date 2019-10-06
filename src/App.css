@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: space-between;
   font-size: calc(6px + 2vmin);
-  color: white;
+  color: #FFFFFF;
 }
 
 .App-header {
@@ -16,7 +16,7 @@
 .App-content {
 }
 
-.App-content p{
+.App-content p {
   text-align: left;
 }
 
@@ -39,7 +39,7 @@
   background: #53565C;
   margin-bottom: 0.5em;
   border: 1px solid #53565C;
-  color: white;
+  color: #FFFFFF;
   padding-left: 0;
 }
 
@@ -54,19 +54,8 @@
 }
 
 .App-list {
+  width: 100%;
   text-align: left;
-  clear: both;
-  overflow: auto;
-  padding: 0 1em;
-  max-width: 600px;
-}
-.App-list > dt {
-  float: left;
-  clear: right;
-}
-.App-list > dd {
-  float: right;
-  font-family: monospace;
 }
 
 .App-link {
@@ -76,4 +65,24 @@
 .App-input-section {
   background-color: #53565C;
   padding: 2%;
+}
+
+.App-list1 {
+  color: #AB464A;
+}
+
+.App-list2 {
+  color: #477762;
+}
+
+.App-list3 {
+  color: #376577;
+}
+
+.App-list-right {
+  padding-left: 2rem !important;
+}
+
+tr.App-row td {
+  border-bottom: 1px solid #FFFFFF;
 }
