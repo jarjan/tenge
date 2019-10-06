@@ -44,27 +44,29 @@ class App extends Component {
           </h1>
         </header>
         <main className="App-content">
-          <p>Введите свою заработную плату в месяц в теңге:</p>
-          <section className="App-form">
-            <input
-              className="App-input"
-              type="number"
-              min="52000"
-              step="any"
-              id="salary"
-              value={salary}
-              onChange={this.handleInputChange}
-            />
-            <label className="App-label" htmlFor="net">
-              На руки
-            </label>
-            <input
-              className="App-checkbox"
-              type="checkbox"
-              id="net"
-              checked={net}
-              onChange={this.handleCheckboxChange}
-            />
+          <section className="App-input-section">
+            <p>Введите свою заработную плату в месяц в теңге:</p>
+            <section className="App-form">
+              <input
+                className="App-input"
+                type="number"
+                min="52000"
+                step="any"
+                id="salary"
+                value={salary}
+                onChange={this.handleInputChange}
+              />
+              <label className="App-label" htmlFor="net">
+                На руки
+              </label>
+              <input
+                className="App-checkbox"
+                type="checkbox"
+                id="net"
+                checked={net}
+                onChange={this.handleCheckboxChange}
+              />
+            </section>
           </section>
           <hr />
           <dl className="App-list">
