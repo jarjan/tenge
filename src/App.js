@@ -44,53 +44,93 @@ class App extends Component {
           </h1>
         </header>
         <main className="App-content">
-          <p>Введите свою заработную плату в месяц в теңге:</p>
-          <section className="App-form">
-            <input
-              className="App-input"
-              type="number"
-              min="52000"
-              step="any"
-              id="salary"
-              value={salary}
-              onChange={this.handleInputChange}
-            />
-            <label className="App-label" htmlFor="net">
-              На руки
-            </label>
-            <input
-              className="App-checkbox"
-              type="checkbox"
-              id="net"
-              checked={net}
-              onChange={this.handleCheckboxChange}
-            />
-          </section>
-          <hr />
-          <dl className="App-list">
-            <dt>Оклад:</dt>
-            <dd>{round(netSalary)}</dd>
-
-            <dt>
-              <abbr title="Обязательный пенсионный взнос">ОПВ</abbr>:
-            </dt>
-            <dd>{round(pension)}</dd>
-
-            <dt>
-              <abbr title="Индивидуальный подоходный налог">ИПН</abbr>:
-            </dt>
-            <dd>{round(tax)}</dd>
-
-            <dt>Заработная плата в месяц:</dt>
-            <dd>{round(grossSalary)}</dd>
-
-            <dt>Заработная плата за год:</dt>
-            <dd>{round(grossSalary * 12)}</dd>
-
-            <dt>Оклад за год:</dt>
-            <dd>{round(netSalary * 12)}</dd>
-          </dl>
-          <hr />
+          <div className="App-input-section">
+            <p>Введите свою заработную плату в месяц в теңге:</p>
+            <section className="App-form">
+              <input
+                className="App-input"
+                type="number"
+                min="52000"
+                step="any"
+                id="salary"
+                value={salary}
+                onChange={this.handleInputChange}
+                autoFocus
+              />
+              <label className="App-label" htmlFor="net">
+                На руки
+              </label>
+              <input
+                className="App-checkbox"
+                type="checkbox"
+                id="net"
+                checked={net}
+                onChange={this.handleCheckboxChange}
+              />
+            </section>
+          </div>          
+          {/*<table className="App-table">
+            <tbody>  
+              <tr className="App-row">
+                <td>
+                  <p>Оклад</p>
+                  <p>{round(netSalary)}</p>
+                </td>
+                <td>
+                  <p className="App-list-right"><abbr title="Обязательный пенсионный взнос">ОПВ</abbr></p>
+                  <p className="App-list1 App-list-right">{round(pension)}</p>
+                </td>
+              </tr>
+              <tr className="App-row">
+                <td>
+                  <p><abbr title="Индивидуальный подоходный налог">ИПН</abbr></p>
+                  <p className="App-list1">{round(tax)}</p>
+                </td>
+                <td>
+                  <p className="App-list-right">Заработная плата в месяц</p>
+                  <p  className="App-list2 App-list-right">{round(grossSalary)}</p>
+                </td>
+              </tr>
+              <tr className="App-row">
+                <td>
+                  <p>Заработная плата за год</p>
+                  <p className="App-list3">{round(grossSalary * 12)}</p>
+                </td>
+                <td>
+                  <p className="App-list-right">Оклад за год</p>
+                  <p className="App-list3 App-list-right">{round(netSalary * 12)}</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>*/}
+          <table className="App-table">
+            <tbody>  
+              <tr className="App-row">
+                <td>Оклад</td>
+                <td className="App-list-right"><abbr title="Обязательный пенсионный взнос">ОПВ</abbr></td>
+              </tr>
+              <tr>
+                <td className="App-value">{round(netSalary)}</td>
+                <td className="App-list1 App-list-right App-value">{round(pension)}</td>
+              </tr>
+              <tr className="App-row">
+                <td><abbr title="Индивидуальный подоходный налог">ИПН</abbr></td>
+                <td className="App-list-right">Заработная плата в месяц</td>
+              </tr>
+              <tr>
+                <td className="App-list1 App-value">{round(tax)}</td>
+                <td className="App-list2 App-list-right App-value">{round(grossSalary)}</td>
+              </tr>
+              <tr className="App-row">
+                <td>Заработная плата за год</td>
+                <td className="App-list-right">Оклад за год</td>
+              </tr>
+              <tr>
+                <td className="App-list3 App-value">{round(grossSalary * 12)}</td>
+                <td className="App-list3 App-list-right App-value">{round(netSalary * 12)}</td>
+              </tr>
+            </tbody>
+          </table>
         </main>
         <footer className="App-footer">
           <p>

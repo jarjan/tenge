@@ -6,8 +6,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: calc(6px + 2vmin);
+  color: #FFFFFF;
 }
 
 .App-header {
@@ -16,11 +16,15 @@
 .App-content {
 }
 
+.App-content p {
+  text-align: left;
+}
+
 .App-footer {
 }
 
 .App-form {
-  font-size: 2em;
+  font-size: 1em;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -30,11 +34,13 @@
 .App-input {
   font-size: inherit;
   font-family: monospace;
-  border-radius: 0.2em;
   padding: 0.3em 0.5em;
   max-width: 6em;
-  background: rgba(255, 255, 255, 0.8);
+  background: #53565C;
   margin-bottom: 0.5em;
+  border: 1px solid #53565C;
+  color: #FFFFFF;
+  padding-left: 0;
 }
 
 .App-checkbox {
@@ -47,22 +53,36 @@
   margin-left: 0.5em;
 }
 
-.App-list {
+.App-table {
+  width: 100%;
   text-align: left;
-  clear: both;
-  overflow: auto;
-  padding: 0 1em;
-  max-width: 600px;
-}
-.App-list > dt {
-  float: left;
-  clear: right;
-}
-.App-list > dd {
-  float: right;
-  font-family: monospace;
 }
 
 .App-link {
   color: #007bff;
+}
+
+.App-input-section {
+  background-color: #53565C;
+  padding: 2%;
+}
+
+.App-list1 {
+  color: #AB464A;
+}
+
+.App-list2 {
+  color: #477762;
+}
+
+.App-list3 {
+  color: #376577;
+}
+
+.App-list-right {
+  padding: .5rem 0 .5rem 2rem !important;
+}
+
+td.App-value {
+  border-bottom: 1px solid #FFFFFF;
 }
