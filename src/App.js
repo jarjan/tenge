@@ -69,7 +69,7 @@ class App extends Component {
               />
             </section>
           </section>          
-          <table className="App-list">
+          <table className="App-table">
             <tbody>  
               <tr className="App-row">
                 <td>
