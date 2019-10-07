@@ -44,7 +44,7 @@ class App extends Component {
           </h1>
         </header>
         <main className="App-content">
-          <section className="App-input-section">
+          <div className="App-input-section">
             <p>Введите свою заработную плату в месяц в теңге:</p>
             <section className="App-form">
               <input
@@ -68,7 +68,7 @@ class App extends Component {
                 onChange={this.handleCheckboxChange}
               />
             </section>
-          </section>          
+          </div>          
           <table className="App-table">
             <tbody>  
               <tr className="App-row">
