@@ -80,9 +80,9 @@
 }
 
 .App-list-right {
-  padding-left: 2rem !important;
+  padding: .5rem 0 .5rem 2rem !important;
 }
 
-tr.App-row td {
+td.App-value {
   border-bottom: 1px solid #FFFFFF;
 }

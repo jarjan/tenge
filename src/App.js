@@ -69,7 +69,7 @@ class App extends Component {
               />
             </section>
           </div>          
-          <table className="App-table">
+          {/*<table className="App-table">
             <tbody>  
               <tr className="App-row">
                 <td>
@@ -100,6 +100,34 @@ class App extends Component {
                   <p className="App-list-right">Оклад за год</p>
                   <p className="App-list3 App-list-right">{round(netSalary * 12)}</p>
                 </td>
+              </tr>
+            </tbody>
+          </table>*/}
+          <table className="App-table">
+            <tbody>  
+              <tr className="App-row">
+                <td>Оклад</td>
+                <td className="App-list-right"><abbr title="Обязательный пенсионный взнос">ОПВ</abbr></td>
+              </tr>
+              <tr>
+                <td className="App-value">{round(netSalary)}</td>
+                <td className="App-list1 App-list-right App-value">{round(pension)}</td>
+              </tr>
+              <tr className="App-row">
+                <td><abbr title="Индивидуальный подоходный налог">ИПН</abbr></td>
+                <td className="App-list-right">Заработная плата в месяц</td>
+              </tr>
+              <tr>
+                <td className="App-list1 App-value">{round(tax)}</td>
+                <td className="App-list2 App-list-right App-value">{round(grossSalary)}</td>
+              </tr>
+              <tr className="App-row">
+                <td>Заработная плата за год</td>
+                <td className="App-list-right">Оклад за год</td>
+              </tr>
+              <tr>
+                <td className="App-list3 App-value">{round(grossSalary * 12)}</td>
+                <td className="App-list3 App-list-right App-value">{round(netSalary * 12)}</td>
               </tr>
             </tbody>
           </table>
