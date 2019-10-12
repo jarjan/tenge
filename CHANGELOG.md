@@ -2,6 +2,11 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.3
+
+- Add Open Graph tags
+- Refreshed design
+
 ## 0.3.2
 
 - Adjust style for mobile devices (#14)
