@@ -49,6 +49,11 @@
   height: 0.7em;
 }
 
+.App-select {
+  margin-left: 1em;
+  padding: 0.4em 0.5em;
+}
+
 .App-label {
   margin-left: 0.5em;
 }
