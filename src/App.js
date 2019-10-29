@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getSalaryInfo, round } from './calculator';
+import { getSalaryInfo, round, MIN_SALARY } from './calculator';
 import './App.css';
 
 class App extends Component {
@@ -11,8 +11,7 @@ class App extends Component {
   };
 
   handleInputChange = (event) => {
-    const { id, value, ...args } = event.target;
-    // console.log(value);
+    const { id, value } = event.target;
 
     this.setState({ [id]: value });
   };
@@ -23,6 +22,10 @@ class App extends Component {
     this.setState({ [id]: checked });
   };
 
+  handleSelectYear = (event) => {
+    this.setState({ year: event.target.value})
+  }
+
   render() {
     const { salary, year, net } = this.state;
     const { netSalary, pension, tax, grossSalary } = getSalaryInfo(
@@ -30,6 +33,7 @@ class App extends Component {
       year,
       net,
     );
+    const yearList = Object.keys(MIN_SALARY);
 
     return (
       <div className="App">
@@ -67,6 +71,13 @@ class App extends Component {
                 checked={net}
                 onChange={this.handleCheckboxChange}
               />
+              <select className="App-select" onChange={this.handleSelectYear} value={year}>
+                {
+                  yearList.map(year => {
+                    return <option key={year}>{year}</option>
+                  })
+                }
+              </select>
             </section>
           </div>          
           {/*<table className="App-table">
