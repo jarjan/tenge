@@ -1,6 +1,6 @@
 {
   "name": "tenge.party",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Calculate your Kazakhstani tenge(KZT) salary",
   "author": "Zharzhan Kulmyrza <zharzhan@gmail.com>",
   "homepage": "https://tenge.party",
@@ -18,9 +18,9 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "react-scripts": "^3.2.0"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "^3.3.0"
   },
   "eslintConfig": {
     "extends": "react-app"

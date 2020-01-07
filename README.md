@@ -1,7 +1,5 @@
 # tenge.party 🎉
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/7577d9ad-ae53-4d10-ad1c-6ea612f9fd25/deploy-status)](https://app.netlify.com/sites/tenge/deploys)
-
 > Calculate your tenge salary
 
 Simple tool to calculate your netto/brutto salary after taxes in Kazakhstan.
