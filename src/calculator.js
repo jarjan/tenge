@@ -1,6 +1,15 @@
 export const MIN_SALARY = {
-  '2018': 28284,
-  '2019': 42500,
+  "2010": 14952,
+  "2011": 15999,
+  "2012": 17439,
+  "2013": 18660,
+  "2014": 19966,
+  "2015": 21364,
+  "2016": 22859,
+  "2017": 24459,
+  "2018": 28284,
+  "2019": 42500,
+  "2020": 42500
 };
 
 export const getPension = (netSalary, minSalary) =>
@@ -12,7 +21,7 @@ export const getTax = (netSalary, minSalary, pension) =>
 export const getGrossSalary = (netSalary, pension, tax) =>
   netSalary - pension - tax;
 
-export const getSalaryInfo = (salary, year = 2019, net = true) => {
+export const getSalaryInfo = (salary, year = 2020, net = true) => {
   const minSalary = MIN_SALARY[year];
   const netSalary = net ? (salary - minSalary * 0.1) / 0.81 : salary;
   const pension = getPension(netSalary, minSalary);
@@ -22,5 +31,7 @@ export const getSalaryInfo = (salary, year = 2019, net = true) => {
   return { netSalary, pension, tax, grossSalary };
 };
 
-export const round = (number) =>
-  Number(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + ' ₸';
+export const round = number =>
+  Number(number)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$& ") + " ₸";

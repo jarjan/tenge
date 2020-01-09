@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.4.0
 
+- Update to 2020
 - Upgrade dependencies
 - Migrate to now.sh
 
