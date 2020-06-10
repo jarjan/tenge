@@ -1,4 +1,4 @@
-# tenge.party 🎉
+# tenge.work 💼
 
 > Calculate your tenge salary
 
