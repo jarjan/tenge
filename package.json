@@ -1,15 +1,15 @@
 {
-  "name": "tenge.party",
+  "name": "tenge",
   "version": "0.4.0",
   "description": "Calculate your Kazakhstani tenge(KZT) salary",
   "author": "Zharzhan Kulmyrza <zharzhan@gmail.com>",
-  "homepage": "https://tenge.party",
+  "homepage": "https://tenge.work",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jarjan/tenge.party.git"
+    "url": "https://github.com/jarjan/tenge.git"
   },
   "bugs": {
-    "url": "https://github.com/jarjan/tenge.party/issues"
+    "url": "https://github.com/jarjan/tenge/issues"
   },
   "scripts": {
     "start": "react-scripts start",

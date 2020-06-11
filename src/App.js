@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { getSalaryInfo, round, MIN_SALARY } from './calculator';
-import './App.css';
+import { getSalaryInfo, round, MIN_SALARY } from "./calculator";
+import "./App.css";
 
 class App extends Component {
   state = {
@@ -23,15 +23,15 @@ class App extends Component {
   };
 
   handleSelectYear = (event) => {
-    this.setState({ year: event.target.value})
-  }
+    this.setState({ year: event.target.value });
+  };
 
   render() {
     const { salary, year, net } = this.state;
     const { netSalary, pension, tax, grossSalary } = getSalaryInfo(
       salary,
       year,
-      net,
+      net
     );
     const yearList = Object.keys(MIN_SALARY);
 
@@ -40,10 +40,10 @@ class App extends Component {
         <header className="App-header">
           <h1>
             Теңге
-            <span role="img" aria-label="party">
-              🎉
+            <span role="img" aria-label="work">
+              💼
             </span>
-            {' – '}
+            {" – "}
             Посчитай свою зарплату.
           </h1>
         </header>
@@ -71,17 +71,19 @@ class App extends Component {
                 checked={net}
                 onChange={this.handleCheckboxChange}
               />
-              <select className="App-select" onChange={this.handleSelectYear} value={year}>
-                {
-                  yearList.map(year => {
-                    return <option key={year}>{year}</option>
-                  })
-                }
+              <select
+                className="App-select"
+                onChange={this.handleSelectYear}
+                value={year}
+              >
+                {yearList.map((year) => {
+                  return <option key={year}>{year}</option>;
+                })}
               </select>
             </section>
-          </div>          
+          </div>
           {/*<table className="App-table">
-            <tbody>  
+            <tbody>
               <tr className="App-row">
                 <td>
                   <p>Оклад</p>
@@ -115,30 +117,42 @@ class App extends Component {
             </tbody>
           </table>*/}
           <table className="App-table">
-            <tbody>  
+            <tbody>
               <tr className="App-row">
                 <td>Оклад</td>
-                <td className="App-list-right"><abbr title="Обязательный пенсионный взнос">ОПВ</abbr></td>
+                <td className="App-list-right">
+                  <abbr title="Обязательный пенсионный взнос">ОПВ</abbr>
+                </td>
               </tr>
               <tr>
                 <td className="App-value">{round(netSalary)}</td>
-                <td className="App-list1 App-list-right App-value">{round(pension)}</td>
+                <td className="App-list1 App-list-right App-value">
+                  {round(pension)}
+                </td>
               </tr>
               <tr className="App-row">
-                <td><abbr title="Индивидуальный подоходный налог">ИПН</abbr></td>
+                <td>
+                  <abbr title="Индивидуальный подоходный налог">ИПН</abbr>
+                </td>
                 <td className="App-list-right">Заработная плата в месяц</td>
               </tr>
               <tr>
                 <td className="App-list1 App-value">{round(tax)}</td>
-                <td className="App-list2 App-list-right App-value">{round(grossSalary)}</td>
+                <td className="App-list2 App-list-right App-value">
+                  {round(grossSalary)}
+                </td>
               </tr>
               <tr className="App-row">
                 <td>Заработная плата за год</td>
                 <td className="App-list-right">Оклад за год</td>
               </tr>
               <tr>
-                <td className="App-list3 App-value">{round(grossSalary * 12)}</td>
-                <td className="App-list3 App-list-right App-value">{round(netSalary * 12)}</td>
+                <td className="App-list3 App-value">
+                  {round(grossSalary * 12)}
+                </td>
+                <td className="App-list3 App-list-right App-value">
+                  {round(netSalary * 12)}
+                </td>
               </tr>
             </tbody>
           </table>

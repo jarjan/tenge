@@ -9,7 +9,7 @@ export const MIN_SALARY = {
   "2017": 24459,
   "2018": 28284,
   "2019": 42500,
-  "2020": 42500
+  "2020": 42500,
 };
 
 export const getPension = (netSalary, minSalary) =>
@@ -31,7 +31,7 @@ export const getSalaryInfo = (salary, year = 2020, net = true) => {
   return { netSalary, pension, tax, grossSalary };
 };
 
-export const round = number =>
+export const round = (number) =>
   Number(number)
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$& ") + " ₸";
