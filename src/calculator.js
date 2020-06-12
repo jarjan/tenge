@@ -23,6 +23,10 @@ export const getGrossSalary = (nettoSalary, pension, tax) =>
 
 export const getSalaryInfo = (salary, year = "2020", netto = true) => {
   const minSalary = MIN_SALARY[year];
+  if (salary < minSalary) {
+    return { nettoSalary: salary, pension: 0, tax: 0, grossSalary: salary };
+  }
+
   const nettoSalary = netto ? (salary - minSalary * 0.1) / 0.81 : salary;
   const pension = getPension(nettoSalary, minSalary);
   const tax = getTax(nettoSalary, minSalary, pension);
