@@ -12,23 +12,23 @@ export const MIN_SALARY = {
   "2020": 42500,
 };
 
-export const getPension = (netSalary, minSalary) =>
-  netSalary * 0.1 < minSalary * 75 ? netSalary * 0.1 : minSalary * 75;
+export const getPension = (nettoSalary, minSalary) =>
+  nettoSalary * 0.1 < minSalary * 75 ? nettoSalary * 0.1 : minSalary * 75;
 
-export const getTax = (netSalary, minSalary, pension) =>
-  netSalary === minSalary ? 0 : (netSalary - pension - minSalary) * 0.1;
+export const getTax = (nettoSalary, minSalary, pension) =>
+  nettoSalary === minSalary ? 0 : (nettoSalary - pension - minSalary) * 0.1;
 
-export const getGrossSalary = (netSalary, pension, tax) =>
-  netSalary - pension - tax;
+export const getGrossSalary = (nettoSalary, pension, tax) =>
+  nettoSalary - pension - tax;
 
-export const getSalaryInfo = (salary, year = 2020, net = true) => {
+export const getSalaryInfo = (salary, year = "2020", netto = true) => {
   const minSalary = MIN_SALARY[year];
-  const netSalary = net ? (salary - minSalary * 0.1) / 0.81 : salary;
-  const pension = getPension(netSalary, minSalary);
-  const tax = getTax(netSalary, minSalary, pension);
-  const grossSalary = getGrossSalary(netSalary, pension, tax);
+  const nettoSalary = netto ? (salary - minSalary * 0.1) / 0.81 : salary;
+  const pension = getPension(nettoSalary, minSalary);
+  const tax = getTax(nettoSalary, minSalary, pension);
+  const grossSalary = getGrossSalary(nettoSalary, pension, tax);
 
-  return { netSalary, pension, tax, grossSalary };
+  return { nettoSalary, pension, tax, grossSalary };
 };
 
 export const round = (number) =>

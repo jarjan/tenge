@@ -12,18 +12,28 @@
     "url": "https://github.com/jarjan/tenge/issues"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "preact build",
+    "serve": "sirv build --cors --single",
+    "dev": "preact watch",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "eslint": "6.0.1",
+    "eslint-config-preact": "1.1.0",
+    "identity-obj-proxy": "3.0.0",
+    "preact-cli": "3.0.0-rc.6",
+    "preact-render-spy": "1.2.1",
+    "sirv-cli": "0.4.5"
   },
   "dependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1"
+    "preact": "10.3.2",
+    "preact-render-to-string": "5.1.4"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "preact",
+    "ignorePatterns": [
+      "build/"
+    ]
   },
   "browserslist": [
     ">0.2%",
