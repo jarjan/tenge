@@ -14,7 +14,7 @@ const App = () => {
   };
 
   const handleChangeNetto = (event) => {
-    setIsNetto(event.target.value);
+    setIsNetto(event.target.checked);
   };
 
   const handleSelectYear = (event) => {
@@ -39,7 +39,7 @@ const App = () => {
             💼
           </span>
           {" – "}
-          Посчитай свою зарплату.
+          Посчитай свою зарплату
         </h1>
       </header>
       <main className="App-content">
@@ -56,7 +56,7 @@ const App = () => {
               onInput={handleChangeSalary}
               autoFocus
             />
-            <label className="App-label" htmlFor="net">
+            <label className="App-label" htmlFor="netto">
               На руки
             </label>
             <input
@@ -64,7 +64,7 @@ const App = () => {
               type="checkbox"
               id="netto"
               checked={isNetto}
-              onInput={handleChangeNetto}
+              onChange={handleChangeNetto}
             />
             {/* TODO: fix and return year select
             <select
@@ -125,8 +125,7 @@ const App = () => {
             className="App-link"
             href="https://jarjan.xyz"
             target="_blank"
-            rel="noopener noreferrer"
-          >
+            rel="noopener noreferrer">
             @jarjan.xyz
           </a>
         </p>
