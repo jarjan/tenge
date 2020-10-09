@@ -8,14 +8,14 @@ Simple tool to calculate your netto/brutto salary after taxes in Kazakhstan.
 
 First install node, npm and all dependencies:
 
-```
+```sh
 npm install
 ```
 
-After start developing with:
+After that start developing with:
 
-```
-npm run start
+```sh
+npm run dev
 ```
 
 And open PR!
