@@ -1,15 +1,15 @@
 export const MIN_SALARY = {
-  "2010": 14952,
-  "2011": 15999,
-  "2012": 17439,
-  "2013": 18660,
-  "2014": 19966,
-  "2015": 21364,
-  "2016": 22859,
-  "2017": 24459,
-  "2018": 28284,
-  "2019": 42500,
-  "2020": 42500,
+  2010: 14952,
+  2011: 15999,
+  2012: 17439,
+  2013: 18660,
+  2014: 19966,
+  2015: 21364,
+  2016: 22859,
+  2017: 24459,
+  2018: 28284,
+  2019: 42500,
+  2020: 42500,
 };
 
 export const getPension = (nettoSalary, minSalary) =>
@@ -36,6 +36,6 @@ export const getSalaryInfo = (salary, year = "2020", netto = true) => {
 };
 
 export const round = (number) =>
-  Number(number)
-    .toFixed(2)
-    .replace(/\d(?=(\d{3})+\.)/g, "$& ") + " ₸";
+  `${Number(number).toLocaleString("ru", {
+    maximumFractionDigits: 2,
+  })} ₸`;

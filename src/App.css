@@ -21,6 +21,7 @@
 }
 
 .App-footer {
+  margin-bottom: 0.3em;
 }
 
 .App-form {
@@ -56,6 +57,7 @@
 
 .App-label {
   margin-left: 0.5em;
+  user-select: none;
 }
 
 .App-table {
