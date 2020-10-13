@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.1
+
+- Fix README commands
+- Refactor isNetto checkbox
+- Add some styles for footer and label
+- Replace custom round with `toLocaleString` method
+
 ## 0.4.0
 
 - Update to 2020
