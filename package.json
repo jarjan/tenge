@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "preact": "10.5.3",
-    "preact-render-to-string": "5.1.10"
+    "preact-render-to-string": "5.1.11"
   },
   "eslintConfig": {
     "extends": "preact",
