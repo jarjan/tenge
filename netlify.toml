@@ -1,0 +1,17 @@
+[[redirects]]
+  from = "http://tenge.party/*"
+  to = "https://tenge.work/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://tenge.party/*"
+  to = "https://tenge.work/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://tenge.netlify.app/*"
+  to = "https://tenge.work/:splat"
+  status = 301
+  force = true
