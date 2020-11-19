@@ -1,0 +1,4 @@
+# http and https need separate rules if you don't force_ssl!
+http://tenge.party/* https://tenge.work/:splat 301!
+https://tenge.party/* https://tenge.work/:splat 301!
+https://tenge.netlify.app/* https://tenge.work/:splat 301!
