@@ -10,6 +10,7 @@ export const MIN_SALARY = {
   2018: 28284,
   2019: 42500,
   2020: 42500,
+  2021: 42500,
 };
 
 export const getPension = (nettoSalary, minSalary) =>

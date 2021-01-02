@@ -6,16 +6,16 @@ Simple tool to calculate your netto/brutto salary after taxes in Kazakhstan.
 
 ## Contribution
 
-First install node, npm and all dependencies:
+First install `node`, `yarn` and all dependencies:
 
 ```sh
-npm install
+yarn
 ```
 
 After that start developing with:
 
 ```sh
-npm run dev
+yarn dev
 ```
 
 And open PR!
