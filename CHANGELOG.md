@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.5.0
+
+- Fixed year selector
+- Migrate to `yarn`
+- Update dependencies and `npm` version
+- Refactor round with Intl api to format currency
+
 ## 0.4.1
 
 - Fix README commands

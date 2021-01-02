@@ -13,6 +13,8 @@ export const MIN_SALARY = {
   2021: 42500,
 };
 
+export const YEARS = Object.keys(MIN_SALARY).map((year) => parseInt(year, 10));
+
 export const getPension = (nettoSalary, minSalary) =>
   nettoSalary * 0.1 < minSalary * 75 ? nettoSalary * 0.1 : minSalary * 75;
 
@@ -22,8 +24,8 @@ export const getTax = (nettoSalary, minSalary, pension) =>
 export const getGrossSalary = (nettoSalary, pension, tax) =>
   nettoSalary - pension - tax;
 
-export const getSalaryInfo = (salary, year = "2020", netto = true) => {
-  const minSalary = MIN_SALARY[year];
+export const getSalaryInfo = (salary, year = 2021, netto = true) => {
+  const minSalary = MIN_SALARY[`${year}`];
   if (salary < minSalary) {
     return { nettoSalary: salary, pension: 0, tax: 0, grossSalary: salary };
   }
@@ -36,7 +38,7 @@ export const getSalaryInfo = (salary, year = "2020", netto = true) => {
   return { nettoSalary, pension, tax, grossSalary };
 };
 
-export const round = (number) =>
-  `${Number(number).toLocaleString("ru", {
-    maximumFractionDigits: 2,
-  })} ₸`;
+export const formatCurrency = (number) =>
+  new Intl.NumberFormat("ru-KZ", { style: "currency", currency: "KZT" }).format(
+    number
+  );

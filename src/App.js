@@ -1,11 +1,11 @@
-import { h } from "preact";
 import { useState } from "preact/hooks";
 
-import { getSalaryInfo, round, MIN_SALARY } from "./calculator";
+import { getSalaryInfo, formatCurrency, YEARS } from "./calculator";
+
 import "./App.css";
 
 const App = () => {
-  const [year, setYear] = useState(`${new Date().getFullYear()}`);
+  const [year, setYear] = useState(new Date().getFullYear());
   const [salary, setSalary] = useState(52000);
   const [isNetto, setIsNetto] = useState(true);
 
@@ -18,8 +18,7 @@ const App = () => {
   };
 
   const handleSelectYear = (event) => {
-    console.log(event);
-    setYear(`${event.target.value}`);
+    setYear(event.target.value);
   };
 
   const { nettoSalary, pension, tax, grossSalary } = getSalaryInfo(
@@ -27,9 +26,7 @@ const App = () => {
     year,
     isNetto
   );
-  const yearList = Object.keys(MIN_SALARY);
 
-  console.log({ year, salary, isNetto });
   return (
     <div className="App">
       <header className="App-header">
@@ -66,17 +63,19 @@ const App = () => {
               checked={isNetto}
               onChange={handleChangeNetto}
             />
-            {/* TODO: fix and return year select
             <select
               className="App-select"
               onInput={handleSelectYear}
               value={year}
             >
-              {yearList.map((item) => {
-                return <option key={item}>{item}</option>;
+              {YEARS.map((item) => {
+                return (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                );
               })}
             </select>
-            */}
           </section>
         </div>
         <table className="App-table">
@@ -88,9 +87,9 @@ const App = () => {
               </td>
             </tr>
             <tr>
-              <td className="App-value">{round(nettoSalary)}</td>
+              <td className="App-value">{formatCurrency(nettoSalary)}</td>
               <td className="App-list1 App-list-right App-value">
-                {round(pension)}
+                {formatCurrency(pension)}
               </td>
             </tr>
             <tr className="App-row">
@@ -100,9 +99,9 @@ const App = () => {
               <td className="App-list-right">Заработная плата в месяц</td>
             </tr>
             <tr>
-              <td className="App-list1 App-value">{round(tax)}</td>
+              <td className="App-list1 App-value">{formatCurrency(tax)}</td>
               <td className="App-list2 App-list-right App-value">
-                {round(grossSalary)}
+                {formatCurrency(grossSalary)}
               </td>
             </tr>
             <tr className="App-row">
@@ -110,9 +109,11 @@ const App = () => {
               <td className="App-list-right">Оклад за год</td>
             </tr>
             <tr>
-              <td className="App-list3 App-value">{round(grossSalary * 12)}</td>
+              <td className="App-list3 App-value">
+                {formatCurrency(grossSalary * 12)}
+              </td>
               <td className="App-list3 App-list-right App-value">
-                {round(nettoSalary * 12)}
+                {formatCurrency(nettoSalary * 12)}
               </td>
             </tr>
           </tbody>
