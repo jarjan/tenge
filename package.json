@@ -24,7 +24,7 @@
     "sirv-cli": "1.0.11"
   },
   "dependencies": {
-    "preact": "10.5.12",
+    "preact": "10.5.13",
     "preact-render-to-string": "5.1.12"
   },
   "eslintConfig": {
