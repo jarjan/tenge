@@ -13,6 +13,8 @@ export const MIN_SALARY = {
   2021: 42500,
 };
 
+export const OSMS = 0.2;
+
 export const YEARS = Object.keys(MIN_SALARY).map((year) => parseInt(year, 10));
 
 export const getPension = (nettoSalary, minSalary) =>
@@ -30,7 +32,7 @@ export const getSalaryInfo = (salary, year = 2021, netto = true) => {
     return { nettoSalary: salary, pension: 0, tax: 0, grossSalary: salary };
   }
 
-  const nettoSalary = netto ? (salary - minSalary * 0.3) / 0.81 : salary;
+  const nettoSalary = netto ? (salary - minSalary * (0.1 + OSMS)) / 0.81 : salary;
   const pension = getPension(nettoSalary, minSalary);
   const tax = getTax(nettoSalary, minSalary, pension);
   const grossSalary = getGrossSalary(nettoSalary, pension, tax);
