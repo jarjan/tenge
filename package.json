@@ -18,7 +18,7 @@
     "lint": "eslint src"
   },
   "devDependencies": {
-    "eslint": "7.27.0",
+    "eslint": "7.29.0",
     "eslint-config-preact": "1.1.4",
     "preact-cli": "3.2.2",
     "sirv-cli": "1.0.12"
