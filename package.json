@@ -21,7 +21,7 @@
     "eslint": "7.27.0",
     "eslint-config-preact": "1.1.4",
     "preact-cli": "3.2.2",
-    "sirv-cli": "1.0.12"
+    "sirv-cli": "2.0.2"
   },
   "dependencies": {
     "preact": "10.5.13",
