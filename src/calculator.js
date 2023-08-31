@@ -11,6 +11,8 @@ export const MIN_SALARY = {
   2019: 42500,
   2020: 42500,
   2021: 42500,
+  2022: 60000,
+  2023: 70000,
 };
 
 export const YEARS = Object.keys(MIN_SALARY).map((year) => parseInt(year, 10));

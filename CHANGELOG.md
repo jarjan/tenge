@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.6.0
+
+- Upgrade node to 18
+- Upgrade dependencies
+- Support years 2022-2023
+
 ## 0.5.0
 
 - Fixed year selector
