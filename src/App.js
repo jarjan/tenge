@@ -92,11 +92,11 @@ const App = () => {
           Сделал{` `}
           <a
             className="App-link"
-            href="https://twitter.com/jarjan"
+            href="https://jarjan.xyz"
             target="_blank"
             rel="noopener noreferrer"
           >
-            @jarjan
+            jarjan
           </a>
         </p>
         <small>
