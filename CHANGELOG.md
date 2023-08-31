@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.6.1
+
+- Remove sirv static file server
+- Only netto income can be given
+- Default year is 2023 and remove the rest
+- Show medical insurance
+
 ## 0.6.0
 
 - Upgrade node to 18

@@ -1,31 +1,18 @@
 import { useState } from "preact/hooks";
 
-import { getSalaryInfo, formatCurrency, YEARS } from "./calculator";
+import { getSalaryInfo, formatCurrency } from "./calculator";
 
 import "./App.css";
 
 const App = () => {
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [salary, setSalary] = useState(52000);
-  const [isNetto, setIsNetto] = useState(true);
+  const [salary, setSalary] = useState(70000);
 
   const handleChangeSalary = (event) => {
     setSalary(event.target.value);
   };
 
-  const handleChangeNetto = (event) => {
-    setIsNetto(event.target.checked);
-  };
-
-  const handleSelectYear = (event) => {
-    setYear(event.target.value);
-  };
-
-  const { nettoSalary, pension, tax, grossSalary } = getSalaryInfo(
-    salary,
-    year,
-    isNetto
-  );
+  const { nettoSalary, pension, tax, grossSalary, insurance } =
+    getSalaryInfo(salary);
 
   return (
     <div className="App">
@@ -41,7 +28,7 @@ const App = () => {
       </header>
       <main className="App-content">
         <div className="App-input-section">
-          <p>Введите свою заработную плату в месяц в теңге:</p>
+          <p>Введите свою заработную плату на руки в месяц в теңге:</p>
           <section className="App-form">
             <input
               className="App-input"
@@ -53,29 +40,6 @@ const App = () => {
               onInput={handleChangeSalary}
               autoFocus
             />
-            <label className="App-label" htmlFor="netto">
-              На руки
-            </label>
-            <input
-              className="App-checkbox"
-              type="checkbox"
-              id="netto"
-              checked={isNetto}
-              onChange={handleChangeNetto}
-            />
-            <select
-              className="App-select"
-              onInput={handleSelectYear}
-              value={year}
-            >
-              {YEARS.map((item) => {
-                return (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                );
-              })}
-            </select>
           </section>
         </div>
         <table className="App-table">
@@ -96,12 +60,16 @@ const App = () => {
               <td>
                 <abbr title="Индивидуальный подоходный налог">ИПН</abbr>
               </td>
-              <td className="App-list-right">Заработная плата в месяц</td>
+              <td className="App-list-right">
+                <abbr title="Обязательное социальное медицинское страхование">
+                  ОСМС
+                </abbr>
+              </td>
             </tr>
             <tr>
               <td className="App-list1 App-value">{formatCurrency(tax)}</td>
               <td className="App-list2 App-list-right App-value">
-                {formatCurrency(grossSalary)}
+                {formatCurrency(insurance)}
               </td>
             </tr>
             <tr className="App-row">
