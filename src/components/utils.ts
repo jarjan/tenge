@@ -3,18 +3,26 @@ const currencyFormatter = new Intl.NumberFormat("ru-KZ", {
   currency: "KZT",
 });
 
-export const getPension = (nettoSalary, minSalary) =>
+export const getPension = (nettoSalary: number, minSalary: number) =>
   nettoSalary * 0.1 < minSalary * 75 ? nettoSalary * 0.1 : minSalary * 75;
 
-export const getTax = (nettoSalary, minSalary, pension) =>
+export const getTax = (
+  nettoSalary: number,
+  minSalary: number,
+  pension: number,
+) =>
   nettoSalary === minSalary ? 0 : (nettoSalary - pension - minSalary) * 0.1;
 
-export const getGrossSalary = (nettoSalary, pension, tax) =>
-  nettoSalary - pension - tax;
+export const getGrossSalary = (
+  nettoSalary: number,
+  pension: number,
+  tax: number,
+) => nettoSalary - pension - tax;
 
-export const getInsurance = (salary) => salary * 0.01;
+export const getInsurance = (salary: number) => salary * 0.01;
 
-export const getSalaryInfo = (salary) => {
+// TODO: fix calculation and cover with tests
+export const getSalaryInfo = (salary: number) => {
   const minSalary = 70000;
   if (salary <= minSalary) {
     return { nettoSalary: salary, pension: 0, tax: 0, grossSalary: salary };
@@ -29,4 +37,4 @@ export const getSalaryInfo = (salary) => {
   return { nettoSalary, pension, tax, grossSalary, insurance };
 };
 
-export const formatCurrency = (number) => currencyFormatter.format(number);
+export const formatCurrency = (num: number) => currencyFormatter.format(num);

@@ -5,14 +5,17 @@ import { getSalaryInfo, formatCurrency } from "./utils";
 import "./Calculator.css";
 
 const Calculator = () => {
-  const [salary, setSalary] = useState(70000);
+  const [salary, setSalary] = useState<string>("70000");
 
-  const handleChangeSalary = (event) => {
-    setSalary(event.target.value);
+  const handleChangeSalary = (event: InputEvent) => {
+    if (event.target instanceof HTMLInputElement) {
+      setSalary(event.target.value);
+    }
   };
 
-  const { nettoSalary, pension, tax, grossSalary, insurance } =
-    getSalaryInfo(salary);
+  const { nettoSalary, pension, tax, grossSalary, insurance } = getSalaryInfo(
+    Number(salary),
+  );
 
   return (
     <div className="Calculator">

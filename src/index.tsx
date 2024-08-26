@@ -7,4 +7,4 @@ export function App() {
   return <Calculator />;
 }
 
-render(<App />, document.getElementById("app"));
+render(<App />, document.getElementById("app")!);
