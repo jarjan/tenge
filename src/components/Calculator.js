@@ -1,10 +1,10 @@
 import { useState } from "preact/hooks";
 
-import { getSalaryInfo, formatCurrency } from "./calculator";
+import { getSalaryInfo, formatCurrency } from "./utils";
 
-import "./App.css";
+import "./Calculator.css";
 
-const App = () => {
+const Calculator = () => {
   const [salary, setSalary] = useState(70000);
 
   const handleChangeSalary = (event) => {
@@ -15,8 +15,8 @@ const App = () => {
     getSalaryInfo(salary);
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="Calculator">
+      <header className="Calculator-header">
         <h1>
           Теңге
           <span role="img" aria-label="work">
@@ -26,12 +26,12 @@ const App = () => {
           Посчитай свою зарплату
         </h1>
       </header>
-      <main className="App-content">
-        <div className="App-input-section">
+      <main className="Calculator-content">
+        <div className="Calculator-input-section">
           <p>Введите свою заработную плату на руки в месяц в теңге:</p>
-          <section className="App-form">
+          <section className="Calculator-form">
             <input
-              className="App-input"
+              className="Calculator-input"
               type="number"
               min="52000"
               step="any"
@@ -42,56 +42,60 @@ const App = () => {
             />
           </section>
         </div>
-        <table className="App-table">
+        <table className="Calculator-table">
           <tbody>
-            <tr className="App-row">
+            <tr className="Calculator-row">
               <td>Оклад</td>
-              <td className="App-list-right">
+              <td className="Calculator-list-right">
                 <abbr title="Обязательный пенсионный взнос">ОПВ</abbr>
               </td>
             </tr>
             <tr>
-              <td className="App-value">{formatCurrency(nettoSalary)}</td>
-              <td className="App-list1 App-list-right App-value">
+              <td className="Calculator-value">
+                {formatCurrency(nettoSalary)}
+              </td>
+              <td className="Calculator-list1 Calculator-list-right Calculator-value">
                 {formatCurrency(pension)}
               </td>
             </tr>
-            <tr className="App-row">
+            <tr className="Calculator-row">
               <td>
                 <abbr title="Индивидуальный подоходный налог">ИПН</abbr>
               </td>
-              <td className="App-list-right">
+              <td className="Calculator-list-right">
                 <abbr title="Обязательное социальное медицинское страхование">
                   ОСМС
                 </abbr>
               </td>
             </tr>
             <tr>
-              <td className="App-list1 App-value">{formatCurrency(tax)}</td>
-              <td className="App-list2 App-list-right App-value">
+              <td className="Calculator-list1 Calculator-value">
+                {formatCurrency(tax)}
+              </td>
+              <td className="Calculator-list2 Calculator-list-right Calculator-value">
                 {formatCurrency(insurance)}
               </td>
             </tr>
-            <tr className="App-row">
+            <tr className="Calculator-row">
               <td>Заработная плата за год</td>
-              <td className="App-list-right">Оклад за год</td>
+              <td className="Calculator-list-right">Оклад за год</td>
             </tr>
             <tr>
-              <td className="App-list3 App-value">
+              <td className="Calculator-list3 Calculator-value">
                 {formatCurrency(grossSalary * 12)}
               </td>
-              <td className="App-list3 App-list-right App-value">
+              <td className="Calculator-list3 Calculator-list-right Calculator-value">
                 {formatCurrency(nettoSalary * 12)}
               </td>
             </tr>
           </tbody>
         </table>
       </main>
-      <footer className="App-footer">
+      <footer className="Calculator-footer">
         <p>
           Сделал{` `}
           <a
-            className="App-link"
+            className="Calculator-link"
             href="https://jarjan.xyz"
             target="_blank"
             rel="noopener noreferrer"
@@ -107,4 +111,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Calculator;

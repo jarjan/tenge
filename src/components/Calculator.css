@@ -1,4 +1,4 @@
-.App {
+.Calculator {
   text-align: center;
   background-color: #282c34;
   min-height: 100vh;
@@ -10,11 +10,11 @@
   color: #ffffff;
 }
 
-.App-footer {
+.Calculator-footer {
   margin-bottom: 0.3em;
 }
 
-.App-form {
+.Calculator-form {
   font-size: 1em;
   display: flex;
   flex-wrap: wrap;
@@ -22,7 +22,7 @@
   align-items: baseline;
 }
 
-.App-input {
+.Calculator-input {
   font-size: inherit;
   font-family: monospace;
   padding: 0.3em 0.5em;
@@ -34,52 +34,52 @@
   padding-left: 0;
 }
 
-.App-checkbox {
+.Calculator-checkbox {
   font-size: inherit;
   width: 0.7em;
   height: 0.7em;
 }
 
-.App-select {
+.Calculator-select {
   margin-left: 1em;
   padding: 0.4em 0.5em;
 }
 
-.App-label {
+.Calculator-label {
   margin-left: 0.5em;
   user-select: none;
 }
 
-.App-table {
+.Calculator-table {
   width: 100%;
   text-align: left;
 }
 
-.App-link {
+.Calculator-link {
   color: #007bff;
 }
 
-.App-input-section {
+.Calculator-input-section {
   background-color: #53565c;
   padding: 2%;
 }
 
-.App-list1 {
+.Calculator-list1 {
   color: #ab464a;
 }
 
-.App-list2 {
+.Calculator-list2 {
   color: #477762;
 }
 
-.App-list3 {
+.Calculator-list3 {
   color: #376577;
 }
 
-.App-list-right {
+.Calculator-list-right {
   padding: 0.5rem 0 0.5rem 2rem !important;
 }
 
-td.App-value {
+td.Calculator-value {
   border-bottom: 1px solid #ffffff;
 }

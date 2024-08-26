@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.7.0
+
+- Migrate to `vite` and `npm`
+- Slight refactor of code
+- Added typescript
+
 ## 0.6.1
 
 - Remove sirv static file server
