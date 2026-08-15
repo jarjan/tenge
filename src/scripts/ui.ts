@@ -445,42 +445,62 @@ export function initApp(): void {
     shareCurrentUrl();
   });
 
-  // 9. Tax Info Tooltip Popover Triggers
-  document.querySelectorAll<HTMLButtonElement>(".info-trigger-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+  // 9. Contextual Tax Tooltip Triggers (Hover, Focus, & Click)
+  document.querySelectorAll<HTMLElement>(".tax-term-info").forEach((trigger) => {
+    trigger.addEventListener("mouseenter", () => {
+      const id = trigger.dataset.tooltipId;
+      if (id) showTaxTooltip(id, trigger);
+    });
+
+    trigger.addEventListener("mouseleave", () => {
+      hideTaxTooltip();
+    });
+
+    trigger.addEventListener("focusin", () => {
+      const id = trigger.dataset.tooltipId;
+      if (id) showTaxTooltip(id, trigger);
+    });
+
+    trigger.addEventListener("focusout", () => {
+      hideTaxTooltip();
+    });
+
+    trigger.addEventListener("click", (e) => {
       e.stopPropagation();
-      const id = btn.dataset.tooltipId;
-      if (id) showTaxPopover(id);
+      const id = trigger.dataset.tooltipId;
+      const tooltip = document.getElementById("tax-info-popover");
+      if (tooltip && tooltip.style.display !== "none" && tooltip.dataset.activeId === id) {
+        hideTaxTooltip();
+      } else if (id) {
+        showTaxTooltip(id, trigger);
+      }
     });
   });
 
-  document.getElementById("popover-close-btn")?.addEventListener("click", () => {
-    hideTaxPopover();
-  });
-
-  const popoverModal = document.getElementById("tax-info-popover");
-  popoverModal?.addEventListener("click", (e) => {
-    if (e.target === popoverModal) {
-      hideTaxPopover();
+  // Global dismiss on click outside or escape
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    if (!target?.closest(".tax-term-info") && !target?.closest("#tax-info-popover")) {
+      hideTaxTooltip();
     }
   });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      hideTaxPopover();
+      hideTaxTooltip();
     }
   });
 }
 
 /**
- * Displays tax line item information popover
+ * Displays anchored floating tax item tooltip near trigger element
  */
-export function showTaxPopover(tooltipId: string): void {
+export function showTaxTooltip(tooltipId: string, triggerEl: HTMLElement): void {
   const t = translations[state.locale];
   const item = t.calculator.tooltips[tooltipId as keyof typeof t.calculator.tooltips];
   if (!item) return;
 
-  const popover = document.getElementById("tax-info-popover");
+  const tooltip = document.getElementById("tax-info-popover");
   const titleEl = document.getElementById("popover-title");
   const descEl = document.getElementById("popover-desc");
   const formulaEl = document.getElementById("popover-formula");
@@ -489,19 +509,41 @@ export function showTaxPopover(tooltipId: string): void {
   if (descEl) descEl.textContent = item.desc;
   if (formulaEl) formulaEl.textContent = item.formula;
 
-  if (popover) {
-    popover.style.display = "flex";
-    popover.setAttribute("aria-hidden", "false");
+  if (!tooltip) return;
+
+  tooltip.dataset.activeId = tooltipId;
+  tooltip.style.display = "block";
+  tooltip.setAttribute("aria-hidden", "false");
+
+  // Dynamic positioning relative to viewport
+  const rect = triggerEl.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
+
+  let left = rect.left;
+  if (left + tooltipRect.width > window.innerWidth - 16) {
+    left = Math.max(16, window.innerWidth - tooltipRect.width - 16);
   }
+  if (left < 16) {
+    left = 16;
+  }
+
+  let top = rect.bottom + 6;
+  if (top + tooltipRect.height > window.innerHeight - 16) {
+    top = Math.max(16, rect.top - tooltipRect.height - 6);
+  }
+
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
 }
 
 /**
- * Hides tax line item information popover
+ * Hides anchored floating tax item tooltip
  */
-export function hideTaxPopover(): void {
-  const popover = document.getElementById("tax-info-popover");
-  if (popover) {
-    popover.style.display = "none";
-    popover.setAttribute("aria-hidden", "true");
+export function hideTaxTooltip(): void {
+  const tooltip = document.getElementById("tax-info-popover");
+  if (tooltip) {
+    tooltip.style.display = "none";
+    tooltip.removeAttribute("data-active-id");
+    tooltip.setAttribute("aria-hidden", "true");
   }
 }

@@ -583,152 +583,132 @@
 .col-net { color: var(--color-net); }
 .col-gross { color: var(--accent-blue); }
 .col-tax { color: var(--color-ipn); }
-.cell-title-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .cell-title {
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.info-trigger-btn {
-  background: transparent;
-  border: 1px solid var(--border-color);
+.cell-subtitle {
+  font-size: 0.74rem;
   color: var(--text-muted);
+}
+
+/* Elegant Contextual Tax Term Tooltip */
+.tax-term-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: help;
+  border-bottom: 1px dashed rgba(148, 163, 184, 0.45);
+  padding-bottom: 1px;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.tax-term-info:hover,
+.tax-term-info:focus-visible {
+  border-bottom-color: var(--accent-blue);
+  color: var(--accent-blue);
+  outline: none;
+}
+
+.info-icon-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  background: var(--bg-pill);
+  border: 1px solid var(--border-color);
   border-radius: 50%;
-  width: 19px;
-  height: 19px;
+  width: 14px;
+  height: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  flex-shrink: 0;
+  line-height: 1;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
-.info-trigger-btn:hover,
-.info-trigger-btn.active {
-  background: var(--accent-blue);
+.tax-term-info:hover .info-icon-badge,
+.tax-term-info:focus-visible .info-icon-badge {
   color: #ffffff;
+  background: var(--accent-blue);
   border-color: var(--accent-blue);
-  transform: scale(1.12);
+  opacity: 1;
+  transform: scale(1.1);
 }
 
-/* Floating Tax Info Popover */
-.tax-info-popover {
+/* Floating Tooltip Card (Anchored, No Fullscreen Backdrop) */
+.floating-tooltip {
   position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  animation: fadeIn 0.15s ease-out;
-}
-
-.popover-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
+  z-index: 9999;
+  max-width: min(320px, calc(100vw - 32px));
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--border-glow);
-  box-shadow: var(--shadow-lg), 0 0 35px rgba(59, 130, 246, 0.2);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.4rem;
-  max-width: 420px;
-  width: 100%;
-  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(59, 130, 246, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 0.95rem;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.15s ease-out;
 }
 
-@keyframes scaleUp {
+[data-theme="light"] .floating-tooltip {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(203, 213, 225, 0.95);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 0 10px rgba(59, 130, 246, 0.08);
+}
+
+@keyframes tooltipFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.94) translateY(8px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0);
   }
 }
 
-.popover-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color);
+.tooltip-header {
+  margin-bottom: 0.35rem;
 }
 
-.popover-title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.popover-icon {
-  font-size: 1.1rem;
-}
-
-.popover-title {
-  font-size: 0.96rem;
-  font-weight: 800;
+.tooltip-title {
+  font-size: 0.84rem;
+  font-weight: 700;
   color: var(--text-primary);
+  display: block;
 }
 
-.popover-close-btn {
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-color);
+.tooltip-desc {
+  font-size: 0.77rem;
   color: var(--text-secondary);
-  border-radius: 50%;
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  line-height: 1.45;
+  margin: 0 0 0.5rem;
 }
 
-.popover-close-btn:hover {
-  background: var(--bg-pill);
-  color: var(--text-primary);
-}
-
-.popover-desc {
-  font-size: 0.86rem;
-  color: var(--text-secondary);
-  line-height: 1.55;
-  margin: 0 0 0.85rem;
-}
-
-.popover-formula-box {
+.tooltip-formula-box {
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  padding: 0.55rem 0.75rem;
+  padding: 0.35rem 0.55rem;
 }
 
-.popover-formula-label {
-  font-size: 0.7rem;
+.tooltip-formula-label {
+  font-size: 0.64rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
   display: block;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
-.popover-formula {
-  font-size: 0.82rem;
+.tooltip-formula {
+  font-size: 0.74rem;
   font-weight: 700;
   color: var(--accent-gold);
   display: block;
@@ -830,17 +810,48 @@
 
 /* Responsive */
 @media (max-width: 640px) {
+  .app-container {
+    padding: 0.85rem 0.65rem 2.5rem;
+  }
+
+  .site-header {
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .input-card,
+  .summary-card,
+  .visualizer-card,
+  .breakdown-card,
+  .actions-card {
+    padding: 1rem 0.85rem;
+  }
+
+  .main-salary-input {
+    font-size: 1.65rem;
+    padding: 0.75rem 2.5rem 0.75rem 0.85rem;
+  }
+
+  .currency-badge {
+    right: 0.85rem;
+    font-size: 1.35rem;
+  }
+
   .summary-duo-grid {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 
   .primary-amount {
-    font-size: 1.6rem;
+    font-size: 1.55rem;
   }
 
   .actions-card {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
 
   .actions-row {
@@ -850,15 +861,57 @@
   .action-btn {
     flex: 1;
     justify-content: center;
+    padding: 0.65rem 0.75rem;
+    font-size: 0.82rem;
   }
 
   .rates-disclaimer {
     text-align: center;
   }
 
+  .breakdown-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .simple-table {
+    min-width: 440px;
+  }
+
   .simple-table th,
   .simple-table td {
-    padding: 0.6rem 0.35rem;
-    font-size: 0.84rem;
+    padding: 0.6rem 0.4rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand-title-group h1 {
+    font-size: 1.05rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.72rem;
+  }
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1.15rem;
+  }
+
+  .lang-btn {
+    padding: 4px 7px;
+    font-size: 0.72rem;
+  }
+
+  .theme-toggle-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .preset-chip {
+    font-size: 0.78rem;
+    padding: 5px 9px;
   }
 }
