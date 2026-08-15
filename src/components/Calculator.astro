@@ -170,7 +170,16 @@
         <!-- Net -->
         <tr class="row-highlight-net">
           <td>
-            <div class="cell-title" data-i18n="calculator.netSalary">Қолға алатын (Net)</div>
+            <div class="cell-title-group">
+              <span class="cell-title" data-i18n="calculator.netSalary">Қолға (Net)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="net">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
           </td>
           <td id="val-m-net" class="text-right font-mono font-bold col-net">350 000 ₸</td>
           <td id="val-y-net" class="text-right font-mono font-bold col-net">4 200 000 ₸</td>
@@ -180,7 +189,16 @@
         <!-- Gross -->
         <tr class="row-highlight-gross">
           <td>
-            <div class="cell-title" data-i18n="calculator.grossSalary">Оклад (Gross)</div>
+            <div class="cell-title-group">
+              <span class="cell-title" data-i18n="calculator.grossSalary">Оклад (Gross)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="gross">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
           </td>
           <td id="val-m-gross" class="text-right font-mono font-bold col-gross">428 500 ₸</td>
           <td id="val-y-gross" class="text-right font-mono font-bold col-gross">5 142 000 ₸</td>
@@ -190,8 +208,17 @@
         <!-- OPV -->
         <tr>
           <td>
-            <div class="cell-title" data-i18n="calculator.opv">МЗЖ (ОПВ)</div>
-            <div class="cell-subtitle" data-i18n="calculator.opvDesc">Окладтың 10%-ы</div>
+            <div class="cell-title-group">
+              <span class="cell-title" data-i18n="calculator.opv">МЗЖ (ОПВ 10%)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="opv">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="cell-subtitle" data-i18n="calculator.opvDesc">Окладтың 10%-ы (макс 425 000 ₸)</div>
           </td>
           <td id="val-m-opv" class="text-right font-mono">42 850 ₸</td>
           <td id="val-y-opv" class="text-right font-mono">514 200 ₸</td>
@@ -201,8 +228,17 @@
         <!-- VOSMS -->
         <tr>
           <td>
-            <div class="cell-title" data-i18n="calculator.vosms">МӘМСЖ (ВОСМС)</div>
-            <div class="cell-subtitle" data-i18n="calculator.vosmsDesc">Окладтың 2%-ы</div>
+            <div class="cell-title-group">
+              <span class="cell-title" data-i18n="calculator.vosms">МӘМСЖ (ВОСМС 2%)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="vosms">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="cell-subtitle" data-i18n="calculator.vosmsDesc">Окладтың 2%-ы (макс 17 000 ₸)</div>
           </td>
           <td id="val-m-vosms" class="text-right font-mono">8 570 ₸</td>
           <td id="val-y-vosms" class="text-right font-mono">102 840 ₸</td>
@@ -212,7 +248,16 @@
         <!-- IPN -->
         <tr>
           <td>
-            <div class="cell-title" data-i18n="calculator.ipn">ЖКН (ИПН)</div>
+            <div class="cell-title-group">
+              <span class="cell-title" data-i18n="calculator.ipn">ЖКН (ИПН 10%)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="ipn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
             <div class="cell-subtitle" data-i18n="calculator.ipnDesc">Салық салынатын базаның 10%-ы</div>
           </td>
           <td id="val-m-ipn" class="text-right font-mono">27 080 ₸</td>
@@ -223,7 +268,16 @@
         <!-- Total Employee Taxes -->
         <tr class="row-total">
           <td>
-            <strong data-i18n="calculator.totalEmployeeTaxes">Барлық ұсталымдар</strong>
+            <div class="cell-title-group">
+              <strong data-i18n="calculator.totalEmployeeTaxes">Барлық ұсталымдар</strong>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="totalEmployee">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
           </td>
           <td id="val-m-total-employee" class="text-right font-mono font-bold col-tax">78 500 ₸</td>
           <td id="val-y-total-employee" class="text-right font-mono font-bold col-tax">942 000 ₸</td>
@@ -239,37 +293,115 @@
           </td>
         </tr>
         <tr>
-          <td><span data-i18n="calculator.so">ӘА (СО 3.5%)</span></td>
+          <td>
+            <div class="cell-title-group">
+              <span data-i18n="calculator.so">ӘА (СО 3.5%)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="so">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+          </td>
           <td id="val-m-so" class="text-right font-mono">13 500 ₸</td>
           <td id="val-y-so" class="text-right font-mono">162 000 ₸</td>
           <td id="val-fx-so" class="text-right font-mono text-muted">≈ $27 · €25</td>
         </tr>
         <tr>
-          <td><span data-i18n="calculator.oosms">МӘМСА (ООСМС 3%)</span></td>
+          <td>
+            <div class="cell-title-group">
+              <span data-i18n="calculator.oosms">МӘМСА (ООСМС 3%)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="oosms">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+          </td>
           <td id="val-m-oosms" class="text-right font-mono">12 855 ₸</td>
           <td id="val-y-oosms" class="text-right font-mono">154 260 ₸</td>
           <td id="val-fx-oosms" class="text-right font-mono text-muted">≈ $26 · €24</td>
         </tr>
         <tr>
-          <td><span data-i18n="calculator.opvr">ЖМЗВ (ОПВР 1.5%)</span></td>
+          <td>
+            <div class="cell-title-group">
+              <span data-i18n="calculator.opvr">ЖМЗВ (ОПВР 1.5%)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="opvr">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+          </td>
           <td id="val-m-opvr" class="text-right font-mono">6 428 ₸</td>
           <td id="val-y-opvr" class="text-right font-mono">77 130 ₸</td>
           <td id="val-fx-opvr" class="text-right font-mono text-muted">≈ $13 · €12</td>
         </tr>
         <tr>
-          <td><span data-i18n="calculator.sn">ӘС (СН)</span></td>
+          <td>
+            <div class="cell-title-group">
+              <span data-i18n="calculator.sn">ӘС (СН)</span>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="sn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+          </td>
           <td id="val-m-sn" class="text-right font-mono">22 500 ₸</td>
           <td id="val-y-sn" class="text-right font-mono">270 000 ₸</td>
           <td id="val-fx-sn" class="text-right font-mono text-muted">≈ $45 · €41</td>
         </tr>
         <tr class="row-total row-employer-total">
-          <td><strong data-i18n="calculator.totalEmployerCost">Компанияның барлық шығыны</strong></td>
+          <td>
+            <div class="cell-title-group">
+              <strong data-i18n="calculator.totalEmployerCost">Компанияның барлық шығыны</strong>
+              <button class="info-trigger-btn" type="button" aria-label="Explanation" data-tooltip-id="totalEmployer">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+          </td>
           <td id="val-m-total-employer-cost" class="text-right font-mono font-bold col-employer">483 783 ₸</td>
           <td id="val-y-total-employer-cost" class="text-right font-mono font-bold col-employer">5 805 390 ₸</td>
           <td id="val-fx-total-employer-cost" class="text-right font-mono text-muted">≈ $968 · €888</td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Floating Tax Info Popover -->
+    <div id="tax-info-popover" class="tax-info-popover" style="display: none;" role="tooltip">
+      <div class="popover-card glass-panel">
+        <div class="popover-header">
+          <div class="popover-title-row">
+            <span class="popover-icon">ℹ️</span>
+            <span id="popover-title" class="popover-title"></span>
+          </div>
+          <button id="popover-close-btn" class="popover-close-btn" type="button" aria-label="Close">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <p id="popover-desc" class="popover-desc"></p>
+        <div class="popover-formula-box">
+          <span class="popover-formula-label" data-i18n="calculator.formulaLabel">Есептеу формуласы:</span>
+          <code id="popover-formula" class="popover-formula font-mono"></code>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Quick Actions & Rates Note -->

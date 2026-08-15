@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Kazakh Cyrillic typography powered by Golos Text
 - Minimum wage constraint (85 000 ₸ / МЗП) with live typing warnings and auto-clamping
 - Dynamic OpenGraph social share card generation for Netlify (`/api/og.png`)
+- Interactive tax deduction tooltips and popovers with statutory explanations and calculation formulas
 - Instant Dark / Light theme switcher without input transitions/flashing
 - Responsive mobile-first layout and keyboard accessibility
 

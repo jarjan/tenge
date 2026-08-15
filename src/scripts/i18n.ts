@@ -38,6 +38,7 @@ export interface LocaleContent {
 
     toggleEmployer: string;
     employerSectionTitle: string;
+    formulaLabel: string;
 
     // Line items
     netSalary: string;
@@ -60,6 +61,20 @@ export interface LocaleContent {
     sn: string;
     totalEmployerTaxes: string;
     totalEmployerCost: string;
+
+    tooltips: {
+      net: { title: string; desc: string; formula: string };
+      gross: { title: string; desc: string; formula: string };
+      opv: { title: string; desc: string; formula: string };
+      vosms: { title: string; desc: string; formula: string };
+      ipn: { title: string; desc: string; formula: string };
+      totalEmployee: { title: string; desc: string; formula: string };
+      so: { title: string; desc: string; formula: string };
+      oosms: { title: string; desc: string; formula: string };
+      opvr: { title: string; desc: string; formula: string };
+      sn: { title: string; desc: string; formula: string };
+      totalEmployer: { title: string; desc: string; formula: string };
+    };
 
     actions: {
       copySummary: string;
@@ -116,6 +131,7 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       toggleEmployer: "Жұмыс берушінің шығындарын көрсету",
       employerSectionTitle: "Жұмыс берушінің қосымша салықтары",
+      formulaLabel: "Есептеу формуласы:",
 
       netSalary: "Қолға (Net)",
       grossSalary: "Оклад (Gross)",
@@ -137,6 +153,64 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       sn: "ӘС (СН)",
       totalEmployerTaxes: "Жұмыс беруші салықтары",
       totalEmployerCost: "Компанияның барлық шығыны",
+
+      tooltips: {
+        net: {
+          title: "Қолға алатын жалақы (Net)",
+          desc: "Барлық салықтар мен міндетті жарналар ұсталғаннан кейін қызметкердің банк шотына түсетін таза табыс.",
+          formula: "Оклад − (МЗЖ + МӘМСЖ + ЖКН)",
+        },
+        gross: {
+          title: "Еңбек шартындағы оклад (Gross)",
+          desc: "Салықтар мен зейнетақы аударымдарына дейінгі келісімшартта бекітілген жалақы сомасы.",
+          formula: "Қолға ақша + барлық ұсталымдар",
+        },
+        opv: {
+          title: "Міндетті зейнетақы жарнасы (МЗЖ / ОПВ)",
+          desc: "БЖЗҚ-ға (ЕНПФ) қызметкердің жеке зейнетақы шотына аударылатын 10% жарна. Ең жоғарғы шегі — 50 ЕТЖ (425 000 ₸).",
+          formula: "Оклад × 10% (макс 425 000 ₸)",
+        },
+        vosms: {
+          title: "МӘМС жарнасы (МӘМСЖ / ВОСМС)",
+          desc: "Міндетті әлеуметтік медициналық сақтандыру қорына (ӘМСҚ) қызметкер жалақысынан ұсталатын 2% жарна. Ең жоғарғы шегі — 10 ЕТЖ (17 000 ₸).",
+          formula: "Оклад × 2% (макс 17 000 ₸)",
+        },
+        ipn: {
+          title: "Жеке табыс салығы (ЖКН / ИПН)",
+          desc: "Мемлекеттік бюджетке төленетін 10% табыс салығы. Салық салынатын базадан МЗЖ, МӘМСЖ және 14 АЕК стандартты шегерім (55 048 ₸) алынып тасталады. Жалақы ≤ 25 АЕК болса 90% жеңілдік қолданылады.",
+          formula: "(Оклад − МЗЖ − МӘМСЖ − 14 АЕК) × 10%",
+        },
+        totalEmployee: {
+          title: "Жұмыскердің барлық ұсталымдары",
+          desc: "Қызметкер окладынан ұсталатын зейнетақы (10%), медициналық сақтандыру (2%) және табыс салығының (10%) жиынтығы.",
+          formula: "МЗЖ + МӘМСЖ + ЖКН",
+        },
+        so: {
+          title: "Әлеуметтік аударымдар (ӘА / СО)",
+          desc: "Мемлекеттік әлеуметтік сақтандыру қорына (МӘСҚ) жұмыс берушінің өз қаражаты есебінен төленетін 3.5% төлемі. База: 1 ЕТЖ-ден 7 ЕТЖ-ге дейін.",
+          formula: "(Оклад − МЗЖ) × 3.5%",
+        },
+        oosms: {
+          title: "Жұмыс берушінің МӘМС аударымы (МӘМСА / ООСМС)",
+          desc: "Медициналық сақтандыру қорына жұмыс беруші төлейтін 3% аударым. Қызметкердің жалақысынан ұсталмайды.",
+          formula: "Оклад × 3% (макс 25 500 ₸)",
+        },
+        opvr: {
+          title: "Жұмыс берушінің зейнетақы жарнасы (ЖМЗВ / ОПВР)",
+          desc: "1975 жылдан кейін туған жұмыскерлер үшін жұмыс берушінің өз есебінен төленетін 1.5% зейнетақы жарнасы.",
+          formula: "Оклад × 1.5%",
+        },
+        sn: {
+          title: "Әлеуметтік салық (ӘС / СН)",
+          desc: "Жұмыс беруші бюджетке төлейтін 6% салық. Одан әлеуметтік аударымдар (ӘА) сомасы шегеріледі.",
+          formula: "(Оклад − МЗЖ − МӘМСЖ) × 6% − ӘА",
+        },
+        totalEmployer: {
+          title: "Компанияның барлық шығыны",
+          desc: "Қызметкерге төленетін оклад пен жұмыс берушінің барлық қосымша салықтары мен аударымдарының жиынтығы.",
+          formula: "Оклад + ӘА + МӘМСА + ЖМЗВ + ӘС",
+        },
+      },
 
       actions: {
         copySummary: "Есепті көшіру",
@@ -192,6 +266,7 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       toggleEmployer: "Показать налоги работодателя",
       employerSectionTitle: "Налоги и отчисления работодателя",
+      formulaLabel: "Формула расчета:",
 
       netSalary: "На руки (Net)",
       grossSalary: "Оклад (Gross)",
@@ -213,6 +288,64 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       sn: "СН",
       totalEmployerTaxes: "Налоги работодателя",
       totalEmployerCost: "Полные расходы компании",
+
+      tooltips: {
+        net: {
+          title: "Зарплата на руки (Net)",
+          desc: "Сумма, которую сотрудник фактически получает на банковскую карту после вычета всех обязательных налогов и взносов.",
+          formula: "Оклад − (ОПВ + ВОСМС + ИПН)",
+        },
+        gross: {
+          title: "Оклад по договору (Gross)",
+          desc: "Сумма заработной платы, зафиксированная в трудовом договоре до удержания обязательных налогов и взносов.",
+          formula: "На руки + все удержания",
+        },
+        opv: {
+          title: "Обязательные пенсионные взносы (ОПВ)",
+          desc: "10% от оклада, направляемые на индивидуальный пенсионный счет в ЕНПФ. Максимальный предел — 50 МЗП (425 000 ₸).",
+          formula: "Оклад × 10% (макс 425 000 ₸)",
+        },
+        vosms: {
+          title: "Взносы на медстрахование (ВОСМС)",
+          desc: "2% от оклада в Фонд обязательного медстрахования (ФСМС), удерживаемые из дохода работника. Максимальный предел — 10 МЗП (17 000 ₸).",
+          formula: "Оклад × 2% (макс 17 000 ₸)",
+        },
+        ipn: {
+          title: "Индивидуальный подоходный налог (ИПН)",
+          desc: "10% налог на доходы физлиц в бюджет. Рассчитывается от базы после вычета ОПВ, ВОСМС и 14 МРП (55 048 ₸). При окладе ≤ 25 МРП действует скидка 90%.",
+          formula: "(Оклад − ОПВ − ВОСМС − 14 МРП) × 10%",
+        },
+        totalEmployee: {
+          title: "Все удержания с работника",
+          desc: "Общая сумма, удерживаемая из оклада сотрудника (ОПВ + ВОСМС + ИПН).",
+          formula: "ОПВ + ВОСМС + ИПН",
+        },
+        so: {
+          title: "Социальные отчисления (СО)",
+          desc: "3.5% выплачивается работодателем за свой счет в Государственный фонд соцстрахования (ГФСС). База: от 1 до 7 МЗП.",
+          formula: "(Оклад − ОПВ) × 3.5%",
+        },
+        oosms: {
+          title: "Отчисления на медстрахование (ООСМС)",
+          desc: "3% от оклада за счет средств работодателя в Фонд медстрахования. Не удерживается из зарплаты сотрудника.",
+          formula: "Оклад × 3% (макс 25 500 ₸)",
+        },
+        opvr: {
+          title: "ОПВ работодателя (ОПВР)",
+          desc: "1.5% от оклада за счет работодателя для сотрудников, рожденных с 1975 года и позже.",
+          formula: "Оклад × 1.5%",
+        },
+        sn: {
+          title: "Социальный налог (СН)",
+          desc: "6% налог работодателя за вычетом суммы социальных отчислений (СО).",
+          formula: "(Оклад − ОПВ − ВОСМС) × 6% − СО",
+        },
+        totalEmployer: {
+          title: "Полные расходы компании",
+          desc: "Сумма оклада сотрудника и всех налогов/отчислений, которые работодатель платит сверх оклада.",
+          formula: "Оклад + СО + ООСМС + ОПВР + СН",
+        },
+      },
 
       actions: {
         copySummary: "Скопировать расчет",
@@ -268,6 +401,7 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       toggleEmployer: "Show employer payroll taxes",
       employerSectionTitle: "Employer Contributions & Taxes",
+      formulaLabel: "Calculation formula:",
 
       netSalary: "Take-Home (Net)",
       grossSalary: "Gross Salary",
@@ -289,6 +423,64 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       sn: "Social Tax (SN)",
       totalEmployerTaxes: "Employer Taxes",
       totalEmployerCost: "Total Employer Expense",
+
+      tooltips: {
+        net: {
+          title: "Take-Home Pay (Net)",
+          desc: "The net amount deposited into the employee's bank account after all mandatory employee taxes and contributions.",
+          formula: "Gross − (OPV + VOSMS + IPN)",
+        },
+        gross: {
+          title: "Contract Gross Salary",
+          desc: "The stated base monthly salary specified in the employment agreement before any deductions.",
+          formula: "Net + all employee deductions",
+        },
+        opv: {
+          title: "Mandatory Pension Contribution (OPV)",
+          desc: "10% pension contribution deposited to the employee's personal UAPF retirement account. Capped at 50 minimum wages (425,000 ₸).",
+          formula: "Gross × 10% (cap 425,000 ₸)",
+        },
+        vosms: {
+          title: "Employee Health Insurance (VOSMS)",
+          desc: "2% mandatory health insurance contribution paid by the employee to FSMS. Capped at 10 minimum wages (17,000 ₸).",
+          formula: "Gross × 2% (cap 17,000 ₸)",
+        },
+        ipn: {
+          title: "Personal Income Tax (IPN)",
+          desc: "10% state personal income tax. Calculated on taxable base after subtracting OPV, VOSMS, and the 14 MRP relief (55,048 ₸). 90% discount applies if salary ≤ 25 MRP.",
+          formula: "(Gross − OPV − VOSMS − 14 MRP) × 10%",
+        },
+        totalEmployee: {
+          title: "Total Employee Deductions",
+          desc: "Combined sum deducted from gross salary (OPV + VOSMS + IPN).",
+          formula: "OPV + VOSMS + IPN",
+        },
+        so: {
+          title: "Social Contributions (SO)",
+          desc: "3.5% social contribution paid directly by the employer to GFSS. Base: min 1 MZP, max 7 MZP.",
+          formula: "(Gross − OPV) × 3.5%",
+        },
+        oosms: {
+          title: "Employer Health Contribution (OOSMS)",
+          desc: "3% healthcare contribution paid directly by the employer. Not deducted from employee salary.",
+          formula: "Gross × 3% (cap 25,500 ₸)",
+        },
+        opvr: {
+          title: "Employer Pension Contribution (OPVR)",
+          desc: "1.5% supplementary pension contribution paid by the employer for employees born in 1975 or later.",
+          formula: "Gross × 1.5%",
+        },
+        sn: {
+          title: "Social Tax (SN)",
+          desc: "6% employer state tax reduced by the Social Contribution (SO) amount.",
+          formula: "(Gross − OPV − VOSMS) × 6% − SO",
+        },
+        totalEmployer: {
+          title: "Total Company Payroll Cost",
+          desc: "The complete cost to the employer: Gross salary + all employer-paid payroll taxes.",
+          formula: "Gross + SO + OOSMS + OPVR + SN",
+        },
+      },
 
       actions: {
         copySummary: "Copy Summary",

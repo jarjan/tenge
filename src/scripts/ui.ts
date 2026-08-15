@@ -444,4 +444,64 @@ export function initApp(): void {
   document.getElementById("btn-share-link")?.addEventListener("click", () => {
     shareCurrentUrl();
   });
+
+  // 9. Tax Info Tooltip Popover Triggers
+  document.querySelectorAll<HTMLButtonElement>(".info-trigger-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.tooltipId;
+      if (id) showTaxPopover(id);
+    });
+  });
+
+  document.getElementById("popover-close-btn")?.addEventListener("click", () => {
+    hideTaxPopover();
+  });
+
+  const popoverModal = document.getElementById("tax-info-popover");
+  popoverModal?.addEventListener("click", (e) => {
+    if (e.target === popoverModal) {
+      hideTaxPopover();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      hideTaxPopover();
+    }
+  });
+}
+
+/**
+ * Displays tax line item information popover
+ */
+export function showTaxPopover(tooltipId: string): void {
+  const t = translations[state.locale];
+  const item = t.calculator.tooltips[tooltipId as keyof typeof t.calculator.tooltips];
+  if (!item) return;
+
+  const popover = document.getElementById("tax-info-popover");
+  const titleEl = document.getElementById("popover-title");
+  const descEl = document.getElementById("popover-desc");
+  const formulaEl = document.getElementById("popover-formula");
+
+  if (titleEl) titleEl.textContent = item.title;
+  if (descEl) descEl.textContent = item.desc;
+  if (formulaEl) formulaEl.textContent = item.formula;
+
+  if (popover) {
+    popover.style.display = "flex";
+    popover.setAttribute("aria-hidden", "false");
+  }
+}
+
+/**
+ * Hides tax line item information popover
+ */
+export function hideTaxPopover(): void {
+  const popover = document.getElementById("tax-info-popover");
+  if (popover) {
+    popover.style.display = "none";
+    popover.setAttribute("aria-hidden", "true");
+  }
 }
