@@ -223,9 +223,13 @@ export function calculateFromGross(
   // ОПВР (ЖМЗВ) - 1.5%, max 50 МЗП (с 2024 г.)
   const opvr = Math.min(gross, 50 * c.mzp) * c.opvrRate;
 
-  // СН (ӘС) - 9.5% от (Gross - OPV - VOSMS) за минусом СО
+  // СН (ӘС) - 9.5% от (Gross - OPV - VOSMS) за минусом СО (минимум 1 МЗП при наличии дохода)
   let snBase = gross - opv - vosms;
-  if (snBase < 0) snBase = 0;
+  if (gross > 0) {
+    if (snBase < c.mzp) snBase = c.mzp;
+  } else {
+    snBase = 0;
+  }
   const rawSn = snBase * c.snRate;
   const sn = Math.max(0, rawSn - so);
 

@@ -202,8 +202,8 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         sn: {
           title: "Әлеуметтік салық (ӘС / СН)",
-          desc: "Жұмыс беруші бюджетке төлейтін 6% салық. Одан әлеуметтік аударымдар (ӘА) сомасы шегеріледі.",
-          formula: "(Оклад − МЗЖ − МӘМСЖ) × 6% − ӘА",
+          desc: "Жұмыс беруші бюджетке төлейтін 9.5% салық (ОУР). Одан әлеуметтік аударымдар (ӘА) сомасы шегеріледі.",
+          formula: "(Оклад − МЗЖ − МӘМСЖ) × 9.5% − ӘА",
         },
         totalEmployer: {
           title: "Компанияның барлық шығыны",
@@ -337,8 +337,8 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         sn: {
           title: "Социальный налог (СН)",
-          desc: "6% налог работодателя за вычетом суммы социальных отчислений (СО).",
-          formula: "(Оклад − ОПВ − ВОСМС) × 6% − СО",
+          desc: "9.5% налог работодателя (ОУР) за вычетом суммы социальных отчислений (СО).",
+          formula: "(Оклад − ОПВ − ВОСМС) × 9.5% − СО",
         },
         totalEmployer: {
           title: "Полные расходы компании",
@@ -472,8 +472,8 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         sn: {
           title: "Social Tax (SN)",
-          desc: "6% employer state tax reduced by the Social Contribution (SO) amount.",
-          formula: "(Gross − OPV − VOSMS) × 6% − SO",
+          desc: "9.5% employer state tax (General regime) reduced by the Social Contribution (SO) amount.",
+          formula: "(Gross − OPV − VOSMS) × 9.5% − SO",
         },
         totalEmployer: {
           title: "Total Company Payroll Cost",
