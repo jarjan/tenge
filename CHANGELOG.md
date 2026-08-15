@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0
+
+- Complete rewrite using Astro 5, TypeScript, and modern component architecture (Node >=24)
+- Tri-lingual localization with Kazakh as default (`kk`, `ru`, `en`) and instant persistent switcher
+- Accurate 2025/2026 Kazakhstan tax calculation engine with dual mode (Net ➔ Gross & Gross ➔ Net)
+- Unified salary breakdown with side-by-side Monthly and Yearly figures
+- Live USD / EUR exchange rate fetching with cached fallback
+- High-contrast semantic distribution visualizer with live percentage badges
+- Always-visible employer contributions & total company payroll cost
+- Kazakh Cyrillic typography powered by Golos Text
+- Minimum wage constraint (85 000 ₸ / МЗП) with live typing warnings and auto-clamping
+- Dynamic OpenGraph social share card generation for Netlify (`/api/og.png`)
+- Instant Dark / Light theme switcher without input transitions/flashing
+- Responsive mobile-first layout and keyboard accessibility
+
 ## 0.7.0
 
 - Migrate to `vite` and `npm`

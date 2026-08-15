@@ -1,10 +1,14 @@
 {
   "name": "tenge",
-  "version": "0.7.0",
-  "description": "Calculate your Kazakhstani tenge(KZT) salary",
+  "version": "1.0.0",
+  "description": "Calculate your Kazakhstani tenge (KZT) salary / Қазақстандағы жалақыңызды есептеңіз",
   "keywords": [
     "salary calculator kazakhstan",
-    "налоговый калькулятор казахстан"
+    "жалақы есептеуіш қазақстан",
+    "налоговый калькулятор казахстан",
+    "tenge salary",
+    "kzt salary calculator",
+    "astro"
   ],
   "author": "Zharzhan Kulmyrza <hey@jarjan.xyz>",
   "license": "MIT",
@@ -15,19 +19,22 @@
   },
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
   },
   "dependencies": {
-    "preact": "^10.13.1"
+    "@astrojs/netlify": "^6.6.5",
+    "astro": "^5.3.0"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.5.0",
-    "eslint": "^8.57.0",
-    "eslint-config-preact": "^1.4.0",
-    "typescript": "^5.5.4",
-    "vite": "^4.3.2"
+    "@astrojs/check": "^0.9.4",
+    "@types/node": "^26.2.0",
+    "typescript": "^5.7.3"
   }
 }

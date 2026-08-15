@@ -1,0 +1,93 @@
+---
+import "../styles/global.css";
+import "../styles/calculator.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Теңге 💼 – Қазақстандағы жалақы калькуляторы",
+  description = "Қазақстандағы жалақыңызды, салықтарды (МЗЖ/ОПВ, ЖКН/ИПН, МӘМС/ВОСМС) және жұмыс берушінің шығындарын жылдам әрі дәл есептеңіз.",
+} = Astro.props;
+
+// Build dynamic OG URL based on request params
+const url = Astro.url;
+const amountParam = url.searchParams.get("amount") || url.searchParams.get("salary") || "350000";
+const modeParam = url.searchParams.get("mode") || "net";
+const langParam = url.searchParams.get("lang") || "kk";
+
+const dynamicOgUrl = `https://tenge.work/api/og.png?amount=${encodeURIComponent(amountParam)}&mode=${encodeURIComponent(modeParam)}&lang=${encodeURIComponent(langParam)}`;
+---
+
+<!doctype html>
+<html lang="kk" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="color-scheme" content="dark light" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content="salary calculator kazakhstan, жалақы есептеуіш қазақстан, налоговый калькулятор казахстан, опв, ипн, восмс, tenge salary, tenge work" />
+    <meta name="author" content="Zharzhan Kulmyrza" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url.toString()} />
+    <meta property="og:site_name" content="tenge.work" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={dynamicOgUrl} />
+    <meta property="og:image:secure_url" content={dynamicOgUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="tenge.work - Kazakhstan Salary & Tax Calculator" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={url.toString()} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={dynamicOgUrl} />
+    <meta property="twitter:image:alt" content="tenge.work - Kazakhstan Salary & Tax Calculator" />
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap theme script to prevent flash of unstyled theme -->
+    <script is:inline>
+      try {
+        const savedTheme = localStorage.getItem('tenge_theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        const savedLang = localStorage.getItem('tenge_locale');
+        const lang = langParam || savedLang || 'kk';
+        if (['kk', 'ru', 'en'].includes(lang)) {
+          document.documentElement.lang = lang;
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <slot />
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+  </body>
+</html>

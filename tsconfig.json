@@ -1,14 +1,10 @@
 {
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "allowJs": true,
-    "checkJs": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "jsxImportSource": "preact"
-  },
-  "include": ["node_modules/vite/client.d.ts", "**/*"]
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
 }
