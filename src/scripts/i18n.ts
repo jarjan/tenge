@@ -99,7 +99,7 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       description: "Қазақстандағы жалақыңызды (айлық және жылдық), салықтарды (МЗЖ, ЖКН, МӘМС) және USD / EUR бағамын жылдам әрі оңай есептеңіз.",
     },
     header: {
-      title: "Теңге",
+      title: "Теңге.work",
       subtitle: "Қазақстандағы жалақы калькуляторы",
       themeToggle: "Тақырыпты ауыстыру",
       langSelect: "Тілді таңдау",
@@ -234,7 +234,7 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       description: "Быстрый и удобный расчет зарплаты на руки и оклада (в месяц и за год), налогов (ОПВ, ИПН, ВОСМС) и эквивалентов в USD / EUR в Казахстане.",
     },
     header: {
-      title: "Теңге",
+      title: "Теңге.work",
       subtitle: "Калькулятор зарплаты в Казахстане",
       themeToggle: "Сменить тему",
       langSelect: "Выбор языка",
@@ -369,7 +369,7 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       description: "Quick & simple salary calculator for Kazakhstan: monthly and yearly take-home pay, gross salary, taxes (OPV, IPN, VOSMS), and USD/EUR conversions.",
     },
     header: {
-      title: "Tenge",
+      title: "Tenge.work",
       subtitle: "Kazakhstan Salary Calculator",
       themeToggle: "Toggle Theme",
       langSelect: "Select Language",

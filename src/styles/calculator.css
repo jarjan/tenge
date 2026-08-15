@@ -547,7 +547,6 @@
 }
 
 .simple-table th {
-  text-align: left;
   padding: 0.6rem 0.5rem;
   border-bottom: 1px solid var(--border-color);
   font-size: 0.8rem;
@@ -555,6 +554,9 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+.simple-table th:first-of-type {
+  text-align: start;
 }
 
 .simple-table td {
@@ -586,7 +588,6 @@
 .col-gross { color: var(--accent-blue); }
 .col-tax { color: var(--color-ipn); }
 .cell-title {
-  font-weight: 600;
   color: var(--text-primary);
 }
 

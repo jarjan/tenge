@@ -1,22 +1,46 @@
 ---
+
 ---
 
 <div class="calculator-layout">
   <!-- Input Hero Section -->
   <section class="input-card glass-panel" aria-labelledby="calc-input-heading">
     <div class="mode-selector-group">
-      <div class="mode-pills" role="radiogroup" aria-label="Calculation direction">
-        <button id="mode-btn-net" class="mode-btn active" type="button" role="radio" aria-checked="true" data-i18n="calculator.netMode">
+      <div
+        class="mode-pills"
+        role="radiogroup"
+        aria-label="Calculation direction"
+      >
+        <button
+          id="mode-btn-net"
+          class="mode-btn active"
+          type="button"
+          role="radio"
+          aria-checked="true"
+          data-i18n="calculator.netMode"
+        >
           Қолға алатын (Net)
         </button>
-        <button id="mode-btn-gross" class="mode-btn" type="button" role="radio" aria-checked="false" data-i18n="calculator.grossMode">
+        <button
+          id="mode-btn-gross"
+          class="mode-btn"
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-i18n="calculator.grossMode"
+        >
           Оклад (Gross)
         </button>
       </div>
     </div>
 
     <div class="salary-input-wrapper">
-      <label for="salary-input" id="input-help-text" class="salary-input-label" data-i18n="calculator.netInputHelp">
+      <label
+        for="salary-input"
+        id="input-help-text"
+        class="salary-input-label"
+        data-i18n="calculator.netInputHelp"
+      >
         Қолға алатын айлық жалақыңызды енгізіңіз:
       </label>
       <div class="input-field-container">
@@ -34,35 +58,74 @@
         />
         <span class="currency-badge" aria-hidden="true">₸</span>
       </div>
-      <div id="min-salary-warning" class="min-salary-hint" style="display: none;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <div
+        id="min-salary-warning"
+        class="min-salary-hint"
+        style="display: none;"
+      >
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="8" x2="12" y2="12"></line>
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
         </svg>
-        <span data-i18n="calculator.minSalaryWarning">Ең төменгі жалақыдан (85 000 ₸) кем емес</span>
+        <span data-i18n="calculator.minSalaryWarning"
+          >Ең төменгі жалақыдан (85 000 ₸) кем емес</span
+        >
       </div>
     </div>
 
     <!-- Quick Presets -->
     <div class="presets-row">
-      <button class="preset-chip" type="button" data-value="85000" data-i18n="calculator.mzpPresetLabel">
+      <button
+        class="preset-chip"
+        type="button"
+        data-value="85000"
+        data-i18n="calculator.mzpPresetLabel"
+      >
         ЕТЖ (85 мың)
       </button>
-      <button class="preset-chip" type="button" data-value="200000">200 000 ₸</button>
-      <button class="preset-chip active" type="button" data-value="350000">350 000 ₸</button>
-      <button class="preset-chip" type="button" data-value="500000">500 000 ₸</button>
-      <button class="preset-chip" type="button" data-value="1000000">1 000 000 ₸</button>
-      <button class="preset-chip" type="button" data-value="2000000">2 000 000 ₸</button>
+      <button class="preset-chip" type="button" data-value="200000"
+        >200 000 ₸</button
+      >
+      <button class="preset-chip active" type="button" data-value="350000"
+        >350 000 ₸</button
+      >
+      <button class="preset-chip" type="button" data-value="500000"
+        >500 000 ₸</button
+      >
+      <button class="preset-chip" type="button" data-value="1000000"
+        >1 000 000 ₸</button
+      >
+      <button class="preset-chip" type="button" data-value="2000000"
+        >2 000 000 ₸</button
+      >
     </div>
 
     <!-- Deduction Toggle -->
     <div class="inline-options">
       <label class="toggle-label" for="deduction-toggle">
-        <input id="deduction-toggle" class="toggle-checkbox" type="checkbox" checked />
+        <input
+          id="deduction-toggle"
+          class="toggle-checkbox"
+          type="checkbox"
+          checked
+        />
         <span class="toggle-text">
-          <strong data-i18n="calculator.deductionLabel">14 АЕК стандартты шегерім</strong>
-          <span class="toggle-hint" data-i18n="calculator.deductionHint">(айына 55 048 ₸ шегерім базасы)</span>
+          <strong data-i18n="calculator.deductionLabel"
+            >14 АЕК стандартты шегерім</strong
+          >
+          <span class="toggle-hint" data-i18n="calculator.deductionHint"
+            >(айына 55 048 ₸ шегерім базасы)</span
+          >
         </span>
       </label>
     </div>
@@ -73,19 +136,24 @@
     <!-- Net Salary Card -->
     <div class="summary-card net-card glass-panel">
       <div class="card-top">
-        <span class="card-label" data-i18n="calculator.monthlyNet">Айлық таза табыс (Net)</span>
+        <span class="card-label" data-i18n="calculator.monthlyNet"
+          >Айлық таза табыс (Net)</span
+        >
         <span class="tag-badge net-badge">Net / Қолға</span>
       </div>
       <div id="val-monthly-net" class="primary-amount">350 000 ₸</div>
       <div id="val-monthly-net-fx" class="fx-amount">≈ $700 · €642</div>
-      
+
       <div class="card-yearly-divider"></div>
-      
+
       <div class="yearly-block">
-        <div class="yearly-title" data-i18n="calculator.yearlyNet">Жылдық таза табыс:</div>
+        <div class="yearly-title" data-i18n="calculator.yearlyNet">
+          Жылдық таза табыс:
+        </div>
         <div class="yearly-val-group">
           <span id="val-yearly-net" class="yearly-val">4 200 000 ₸</span>
-          <span id="val-yearly-net-fx" class="yearly-fx">≈ $8,400 · €7,706</span>
+          <span id="val-yearly-net-fx" class="yearly-fx">≈ $8,400 · €7,706</span
+          >
         </div>
       </div>
     </div>
@@ -93,7 +161,9 @@
     <!-- Gross Salary Card -->
     <div class="summary-card gross-card glass-panel">
       <div class="card-top">
-        <span class="card-label" data-i18n="calculator.monthlyGross">Айлық оклад (Gross)</span>
+        <span class="card-label" data-i18n="calculator.monthlyGross"
+          >Айлық оклад (Gross)</span
+        >
         <span class="tag-badge gross-badge">Gross / Оклад</span>
       </div>
       <div id="val-monthly-gross" class="primary-amount">434 969 ₸</div>
@@ -102,39 +172,85 @@
       <div class="card-yearly-divider"></div>
 
       <div class="yearly-block">
-        <div class="yearly-title" data-i18n="calculator.yearlyGross">Жылдық оклад:</div>
+        <div class="yearly-title" data-i18n="calculator.yearlyGross">
+          Жылдық оклад:
+        </div>
         <div class="yearly-val-group">
           <span id="val-yearly-gross" class="yearly-val">5 219 628 ₸</span>
-          <span id="val-yearly-gross-fx" class="yearly-fx">≈ $10,439 · €9,577</span>
+          <span id="val-yearly-gross-fx" class="yearly-fx"
+            >≈ $10,439 · €9,577</span
+          >
         </div>
       </div>
     </div>
   </section>
 
   <!-- Distribution Track -->
-  <section class="distribution-card glass-panel" aria-label="Salary distribution">
+  <section
+    class="distribution-card glass-panel"
+    aria-label="Salary distribution"
+  >
     <div class="distribution-header">
       <span class="distribution-title">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <circle cx="12" cy="12" r="10"></circle>
           <path d="M12 2a10 10 0 0 1 10 10"></path>
         </svg>
-        <span data-i18n="calculator.distributionTitle">Окладтың бөлінуі (100%):</span>
+        <span data-i18n="calculator.distributionTitle"
+          >Окладтың бөлінуі (100%):</span
+        >
       </span>
-      <span id="dist-gross-label" class="distribution-gross-val font-mono">434 969 ₸</span>
+      <span id="dist-gross-label" class="distribution-gross-val font-mono"
+        >434 969 ₸</span
+      >
     </div>
 
     <div class="distribution-track" aria-hidden="true">
-      <div id="seg-net" class="dist-segment net" style="width: 80.5%;" title="Net Salary"></div>
-      <div id="seg-opv" class="dist-segment opv" style="width: 10.0%;" title="OPV Pension"></div>
-      <div id="seg-vosms" class="dist-segment vosms" style="width: 2.0%;" title="VOSMS Health"></div>
-      <div id="seg-ipn" class="dist-segment ipn" style="width: 7.5%;" title="IPN Tax"></div>
+      <div
+        id="seg-net"
+        class="dist-segment net"
+        style="width: 80.5%;"
+        title="Net Salary"
+      >
+      </div>
+      <div
+        id="seg-opv"
+        class="dist-segment opv"
+        style="width: 10.0%;"
+        title="OPV Pension"
+      >
+      </div>
+      <div
+        id="seg-vosms"
+        class="dist-segment vosms"
+        style="width: 2.0%;"
+        title="VOSMS Health"
+      >
+      </div>
+      <div
+        id="seg-ipn"
+        class="dist-segment ipn"
+        style="width: 7.5%;"
+        title="IPN Tax"
+      >
+      </div>
     </div>
 
     <div class="distribution-legend">
       <div class="legend-item legend-net">
         <span class="legend-dot net"></span>
-        <span class="legend-name" data-i18n="calculator.netSalary">Қолға (Net)</span>
+        <span class="legend-name" data-i18n="calculator.netSalary"
+          >Қолға (Net)</span
+        >
         <span id="pct-net" class="legend-pct">80.5%</span>
       </div>
       <div class="legend-item legend-opv">
@@ -163,7 +279,9 @@
           <th data-i18n="calculator.colItem">Төлем түрі</th>
           <th class="text-right" data-i18n="calculator.colMonth">Айына (₸)</th>
           <th class="text-right" data-i18n="calculator.colYear">Жылына (₸)</th>
-          <th class="text-right" data-i18n="calculator.colFx">USD / EUR (айына)</th>
+          <th class="text-right" data-i18n="calculator.colFx"
+            >USD / EUR (айына)</th
+          >
         </tr>
       </thead>
       <tbody>
@@ -171,93 +289,157 @@
         <tr class="row-highlight-net">
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="net" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="net"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.netSalary">Қолға (Net)</span>
                 <span class="info-icon-badge">?</span>
               </span>
             </div>
           </td>
-          <td id="val-m-net" class="text-right font-mono font-bold col-net">350 000 ₸</td>
-          <td id="val-y-net" class="text-right font-mono font-bold col-net">4 200 000 ₸</td>
-          <td id="val-fx-net" class="text-right font-mono text-muted">≈ $700 · €642</td>
+          <td id="val-m-net" class="text-right font-mono font-bold col-net"
+            >350 000 ₸</td
+          >
+          <td id="val-y-net" class="text-right font-mono font-bold col-net"
+            >4 200 000 ₸</td
+          >
+          <td id="val-fx-net" class="text-right font-mono text-muted"
+            >≈ $700 · €642</td
+          >
         </tr>
 
         <!-- Gross -->
         <tr class="row-highlight-gross">
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="gross" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="gross"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.grossSalary">Оклад (Gross)</span>
                 <span class="info-icon-badge">?</span>
               </span>
             </div>
           </td>
-          <td id="val-m-gross" class="text-right font-mono font-bold col-gross">434 969 ₸</td>
-          <td id="val-y-gross" class="text-right font-mono font-bold col-gross">5 219 628 ₸</td>
-          <td id="val-fx-gross" class="text-right font-mono text-muted">≈ $870 · €798</td>
+          <td id="val-m-gross" class="text-right font-mono font-bold col-gross"
+            >434 969 ₸</td
+          >
+          <td id="val-y-gross" class="text-right font-mono font-bold col-gross"
+            >5 219 628 ₸</td
+          >
+          <td id="val-fx-gross" class="text-right font-mono text-muted"
+            >≈ $870 · €798</td
+          >
         </tr>
 
         <!-- OPV -->
         <tr>
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="opv" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="opv"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.opv">МЗЖ (ОПВ 10%)</span>
                 <span class="info-icon-badge">?</span>
               </span>
             </div>
-            <div class="cell-subtitle" data-i18n="calculator.opvDesc">Окладтың 10%-ы (макс 425 000 ₸)</div>
+            <div class="cell-subtitle" data-i18n="calculator.opvDesc">
+              Окладтың 10%-ы (макс 425 000 ₸)
+            </div>
           </td>
           <td id="val-m-opv" class="text-right font-mono">43 497 ₸</td>
           <td id="val-y-opv" class="text-right font-mono">521 964 ₸</td>
-          <td id="val-fx-opv" class="text-right font-mono text-muted">≈ $87 · €80</td>
+          <td id="val-fx-opv" class="text-right font-mono text-muted"
+            >≈ $87 · €80</td
+          >
         </tr>
 
         <!-- VOSMS -->
         <tr>
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="vosms" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="vosms"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.vosms">МӘМСЖ (ВОСМС 2%)</span>
                 <span class="info-icon-badge">?</span>
               </span>
             </div>
-            <div class="cell-subtitle" data-i18n="calculator.vosmsDesc">Окладтың 2%-ы (макс 17 000 ₸)</div>
+            <div class="cell-subtitle" data-i18n="calculator.vosmsDesc">
+              Окладтың 2%-ы (макс 17 000 ₸)
+            </div>
           </td>
           <td id="val-m-vosms" class="text-right font-mono">8 699 ₸</td>
           <td id="val-y-vosms" class="text-right font-mono">104 388 ₸</td>
-          <td id="val-fx-vosms" class="text-right font-mono text-muted">≈ $17 · €16</td>
+          <td id="val-fx-vosms" class="text-right font-mono text-muted"
+            >≈ $17 · €16</td
+          >
         </tr>
 
         <!-- IPN -->
         <tr>
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="ipn" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="ipn"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.ipn">ЖКН (ИПН 10%)</span>
                 <span class="info-icon-badge">?</span>
               </span>
             </div>
-            <div class="cell-subtitle" data-i18n="calculator.ipnDesc">Салық салынатын базаның 10%-ы</div>
+            <div class="cell-subtitle" data-i18n="calculator.ipnDesc">
+              Салық салынатын базаның 10%-ы
+            </div>
           </td>
           <td id="val-m-ipn" class="text-right font-mono">32 773 ₸</td>
           <td id="val-y-ipn" class="text-right font-mono">393 276 ₸</td>
-          <td id="val-fx-ipn" class="text-right font-mono text-muted">≈ $66 · €60</td>
+          <td id="val-fx-ipn" class="text-right font-mono text-muted"
+            >≈ $66 · €60</td
+          >
         </tr>
 
         <!-- Total Employee Taxes -->
         <tr class="row-total">
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="totalEmployee" tabindex="0" role="button">
-                <strong data-i18n="calculator.totalEmployeeTaxes">Барлық ұсталымдар</strong>
+              <span
+                class="tax-term-info"
+                data-tooltip-id="totalEmployee"
+                tabindex="0"
+                role="button"
+              >
+                <strong data-i18n="calculator.totalEmployeeTaxes"
+                  >Барлық ұсталымдар</strong
+                >
                 <span class="info-icon-badge">?</span>
               </span>
             </div>
           </td>
-          <td id="val-m-total-employee" class="text-right font-mono font-bold col-tax">84 969 ₸</td>
-          <td id="val-y-total-employee" class="text-right font-mono font-bold col-tax">1 019 628 ₸</td>
-          <td id="val-fx-total-employee" class="text-right font-mono text-muted">≈ $170 · €156</td>
+          <td
+            id="val-m-total-employee"
+            class="text-right font-mono font-bold col-tax">84 969 ₸</td
+          >
+          <td
+            id="val-y-total-employee"
+            class="text-right font-mono font-bold col-tax">1 019 628 ₸</td
+          >
+          <td id="val-fx-total-employee" class="text-right font-mono text-muted"
+            >≈ $170 · €156</td
+          >
         </tr>
       </tbody>
 
@@ -265,13 +447,20 @@
       <tbody id="employer-rows-container">
         <tr class="section-header-row">
           <td colspan="4" class="section-header-cell">
-            <span data-i18n="calculator.employerSectionTitle">Жұмыс берушінің қосымша салықтары</span>
+            <span data-i18n="calculator.employerSectionTitle"
+              >Жұмыс берушінің қосымша салықтары</span
+            >
           </td>
         </tr>
         <tr>
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="so" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="so"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.so">ӘА (СО 3.5%)</span>
                 <span class="info-icon-badge">?</span>
               </span>
@@ -279,12 +468,19 @@
           </td>
           <td id="val-m-so" class="text-right font-mono">13 702 ₸</td>
           <td id="val-y-so" class="text-right font-mono">164 424 ₸</td>
-          <td id="val-fx-so" class="text-right font-mono text-muted">≈ $27 · €25</td>
+          <td id="val-fx-so" class="text-right font-mono text-muted"
+            >≈ $27 · €25</td
+          >
         </tr>
         <tr>
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="oosms" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="oosms"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.oosms">МӘМСА (ООСМС 3%)</span>
                 <span class="info-icon-badge">?</span>
               </span>
@@ -292,12 +488,19 @@
           </td>
           <td id="val-m-oosms" class="text-right font-mono">13 049 ₸</td>
           <td id="val-y-oosms" class="text-right font-mono">156 588 ₸</td>
-          <td id="val-fx-oosms" class="text-right font-mono text-muted">≈ $26 · €24</td>
+          <td id="val-fx-oosms" class="text-right font-mono text-muted"
+            >≈ $26 · €24</td
+          >
         </tr>
         <tr>
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="opvr" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="opvr"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.opvr">ЖМЗВ (ОПВР 1.5%)</span>
                 <span class="info-icon-badge">?</span>
               </span>
@@ -305,12 +508,19 @@
           </td>
           <td id="val-m-opvr" class="text-right font-mono">6 525 ₸</td>
           <td id="val-y-opvr" class="text-right font-mono">78 300 ₸</td>
-          <td id="val-fx-opvr" class="text-right font-mono text-muted">≈ $13 · €12</td>
+          <td id="val-fx-opvr" class="text-right font-mono text-muted"
+            >≈ $13 · €12</td
+          >
         </tr>
         <tr>
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="sn" tabindex="0" role="button">
+              <span
+                class="tax-term-info"
+                data-tooltip-id="sn"
+                tabindex="0"
+                role="button"
+              >
                 <span data-i18n="calculator.sn">ӘС (СН)</span>
                 <span class="info-icon-badge">?</span>
               </span>
@@ -318,50 +528,74 @@
           </td>
           <td id="val-m-sn" class="text-right font-mono">22 661 ₸</td>
           <td id="val-y-sn" class="text-right font-mono">271 932 ₸</td>
-          <td id="val-fx-sn" class="text-right font-mono text-muted">≈ $45 · €42</td>
+          <td id="val-fx-sn" class="text-right font-mono text-muted"
+            >≈ $45 · €42</td
+          >
         </tr>
         <tr class="row-total row-employer-total">
           <td>
             <div class="cell-title">
-              <span class="tax-term-info" data-tooltip-id="totalEmployer" tabindex="0" role="button">
-                <strong data-i18n="calculator.totalEmployerCost">Компанияның барлық шығыны</strong>
+              <span
+                class="tax-term-info"
+                data-tooltip-id="totalEmployer"
+                tabindex="0"
+                role="button"
+              >
+                <strong data-i18n="calculator.totalEmployerCost"
+                  >Компанияның барлық шығыны</strong
+                >
                 <span class="info-icon-badge">?</span>
               </span>
             </div>
           </td>
-          <td id="val-m-total-employer-cost" class="text-right font-mono font-bold col-employer">490 906 ₸</td>
-          <td id="val-y-total-employer-cost" class="text-right font-mono font-bold col-employer">5 890 872 ₸</td>
-          <td id="val-fx-total-employer-cost" class="text-right font-mono text-muted">≈ $982 · €901</td>
+          <td
+            id="val-m-total-employer-cost"
+            class="text-right font-mono font-bold col-employer">490 906 ₸</td
+          >
+          <td
+            id="val-y-total-employer-cost"
+            class="text-right font-mono font-bold col-employer">5 890 872 ₸</td
+          >
+          <td
+            id="val-fx-total-employer-cost"
+            class="text-right font-mono text-muted">≈ $982 · €901</td
+          >
         </tr>
       </tbody>
     </table>
-
-    <!-- Contextual Floating Tooltip Popover (Anchored, No Fullscreen Backdrop) -->
-    <div id="tax-info-popover" class="floating-tooltip" style="display: none;" role="tooltip" aria-hidden="true">
-      <div class="tooltip-header">
-        <span id="popover-title" class="tooltip-title"></span>
-      </div>
-      <p id="popover-desc" class="tooltip-desc"></p>
-      <div class="tooltip-formula-box">
-        <span class="tooltip-formula-label" data-i18n="calculator.formulaLabel">Есептеу формуласы:</span>
-        <code id="popover-formula" class="tooltip-formula font-mono"></code>
-      </div>
-      <div class="tooltip-arrow" aria-hidden="true"></div>
-    </div>
   </section>
 
   <!-- Quick Actions & Rates Note -->
   <section class="actions-card">
     <div class="actions-row">
       <button id="btn-copy-summary" class="action-btn" type="button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+          ></path>
         </svg>
         <span data-i18n="calculator.actions.copySummary">Есепті көшіру</span>
       </button>
       <button id="btn-share-link" class="action-btn" type="button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <circle cx="18" cy="5" r="3"></circle>
           <circle cx="6" cy="12" r="3"></circle>
           <circle cx="18" cy="19" r="3"></circle>
@@ -371,10 +605,35 @@
         <span data-i18n="calculator.actions.shareLink">Сілтемені бөлісу</span>
       </button>
     </div>
-    <span id="rates-disclaimer-text" class="rates-disclaimer" data-i18n="calculator.ratesDisclaimer">
+    <span
+      id="rates-disclaimer-text"
+      class="rates-disclaimer"
+      data-i18n="calculator.ratesDisclaimer"
+    >
       Шамамен: 1$ ≈ 500 ₸ · 1€ ≈ 545 ₸
     </span>
   </section>
+
+  <!-- Contextual Floating Tooltip Popover (Anchored, Direct Body Portal) -->
+  <div
+    id="tax-info-popover"
+    class="floating-tooltip"
+    style="display: none;"
+    role="tooltip"
+    aria-hidden="true"
+  >
+    <div class="tooltip-header">
+      <span id="popover-title" class="tooltip-title"></span>
+    </div>
+    <p id="popover-desc" class="tooltip-desc"></p>
+    <div class="tooltip-formula-box">
+      <span class="tooltip-formula-label" data-i18n="calculator.formulaLabel"
+        >Есептеу формуласы:</span
+      >
+      <code id="popover-formula" class="tooltip-formula font-mono"></code>
+    </div>
+    <div class="tooltip-arrow" aria-hidden="true"></div>
+  </div>
 </div>
 
 <script>
