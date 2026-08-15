@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@astrojs/netlify": "^6.6.5",
+    "@resvg/resvg-js": "^2.6.2",
     "astro": "^5.3.0"
   },
   "devDependencies": {
