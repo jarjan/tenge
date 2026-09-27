@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.0
+
+- Update tax engine to the 2026 Tax Code: МРП 4 325 ₸, 30 МРП basic deduction, progressive ИПН (15% above 8 500 МРП/year), 90% correction removed, СО 5%, СН 6% without СО offset, ОПВР 3.5%, ВОСМС cap 20 МЗП, ООСМС cap 40 МЗП
+- Derive all rates and amounts in UI copy from the tax rules instead of hard-coding them
+- Server-render the page in the requested language with real calculated values; add canonical and `hreflang` links
+- Share previews now respect the deduction toggle; OG images are versioned by tax year with a shorter cache TTL
+- Fix header year badge being wiped by translations
+- Thousands separators while typing; Backspace/Delete skip over separators
+- Guard against huge or non-finite amounts (no more `NaN ₸`)
+- Clipboard fallback and error toast; `aria-checked` / `aria-pressed` kept in sync
+- Stale cached exchange rates are no longer labelled as live
+- Add Vitest unit tests for the calculator, translations and URL parameters
+- Remove unused duplicate assets
+- Redesign: flat surfaces instead of glassmorphism and gradients, neutral palette with a single sky-blue accent, tabular Golos Text numerals instead of a monospace font, simpler header, legend and table; the USD/EUR column is hidden on phones instead of scrolling
+- OG share image restyled to match; JetBrains Mono dropped
+- Upgrade to Astro 7 and `@astrojs/netlify` 8; `sharp` pinned to a patched version via `overrides`
+
 ## 1.0.0
 
 - Complete rewrite using Astro 5, TypeScript, and modern component architecture (Node >=24)

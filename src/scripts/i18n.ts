@@ -1,4 +1,18 @@
+import {
+  DEFAULT_CONSTANTS as C,
+  DEFAULT_RATES,
+  formatNumber,
+  formatRate,
+  ipnMonthlyThreshold,
+} from "./calculator";
+
 export type SupportedLocale = "kk" | "ru" | "en";
+
+export const SUPPORTED_LOCALES: readonly SupportedLocale[] = ["kk", "ru", "en"];
+
+export function isSupportedLocale(value: unknown): value is SupportedLocale {
+  return typeof value === "string" && (SUPPORTED_LOCALES as readonly string[]).includes(value);
+}
 
 export interface LocaleContent {
   meta: {
@@ -81,9 +95,21 @@ export interface LocaleContent {
       copied: string;
       shareLink: string;
       linkCopied: string;
+      copyFailed: string;
     };
 
     ratesDisclaimer: string;
+    liveTag: string;
+    perMonthShort: string;
+    perYearShort: string;
+  };
+  og: {
+    perMonth: string;
+    perYear: string;
+    yearlyNetDesc: string;
+    yearlyGrossDesc: string;
+    deductionBadge: string;
+    noDeductionBadge: string;
   };
   footer: {
     madeBy: string;
@@ -92,11 +118,40 @@ export interface LocaleContent {
   };
 }
 
+// Figures shown in copy are derived from the active tax rules so they never drift.
+const mzp = C.mzp;
+const deductionMrp = C.standardDeductionMrpCount;
+const deductionAmount = deductionMrp * C.mrp;
+const deductionSaving = deductionAmount * C.ipnRate;
+const opvCap = C.opvMaxMzp * mzp * C.opvRate;
+const vosmsCap = C.vosmsMaxMzp * mzp * C.vosmsRate;
+const oosmsCap = C.oosmsMaxMzp * mzp * C.oosmsRate;
+const opvrCap = C.opvrMaxMzp * mzp * C.opvrRate;
+const ipnThreshold = ipnMonthlyThreshold(C);
+const ipnHighMrp = formatNumber(C.ipnHighThresholdMrpYear, "ru");
+
+const rate = {
+  opv: formatRate(C.opvRate),
+  vosms: formatRate(C.vosmsRate),
+  ipn: formatRate(C.ipnRate),
+  ipnHigh: formatRate(C.ipnHighRate),
+  so: formatRate(C.soRate),
+  oosms: formatRate(C.oosmsRate),
+  opvr: formatRate(C.opvrRate),
+  sn: formatRate(C.snRate),
+};
+
+const kk = (v: number) => `${formatNumber(v, "kk")} ₸`;
+const ru = (v: number) => `${formatNumber(v, "ru")} ₸`;
+const en = (v: number) => `${formatNumber(v, "en")} ₸`;
+const usdEur = (l: SupportedLocale) =>
+  `1$ ≈ ${formatNumber(DEFAULT_RATES.usd, l)} ₸ · 1€ ≈ ${formatNumber(DEFAULT_RATES.eur, l)} ₸`;
+
 export const translations: Record<SupportedLocale, LocaleContent> = {
   kk: {
     meta: {
-      title: "Теңге 💼 – Қазақстандағы жалақы калькуляторы",
-      description: "Қазақстандағы жалақыңызды (айлық және жылдық), салықтарды (МЗЖ, ЖКН, МӘМС) және USD / EUR бағамын жылдам әрі оңай есептеңіз.",
+      title: "Теңге – Қазақстандағы жалақы калькуляторы",
+      description: `Қазақстандағы жалақыңызды (айлық және жылдық), салықтарды (МЗЖ, ЖКН, МӘМС) және USD / EUR бағамын ${C.taxYear} жылғы ережелер бойынша жылдам есептеңіз.`,
     },
     header: {
       title: "Теңге.work",
@@ -112,11 +167,11 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       grossInputHelp: "Окладыңызды (салыққа дейінгі) енгізіңіз:",
       inputPlaceholder: "Мысалы: 350 000",
       salaryPresetsTitle: "Жиі сомалар:",
-      mzpPresetLabel: "ЕТЖ (85 мың)",
-      minSalaryWarning: "Ең төменгі жалақыдан (85 000 ₸) кем емес",
+      mzpPresetLabel: `ЕТЖ (${mzp / 1000} мың)`,
+      minSalaryWarning: `Ең төменгі жалақыдан (${kk(mzp)}) кем емес`,
 
-      deductionLabel: "14 АЕК стандартты шегерім",
-      deductionHint: "Салықты 5 505 ₸-ге азайтады (55 048 ₸ жеңілдік базасы)",
+      deductionLabel: `${deductionMrp} АЕК базалық шегерім`,
+      deductionHint: `Салықты ${kk(deductionSaving)}-ге азайтады (${kk(deductionAmount)} шегерім базасы)`,
 
       monthlyNet: "Айлық таза табыс (Net)",
       yearlyNet: "Жылдық таза табыс",
@@ -135,22 +190,22 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       netSalary: "Қолға (Net)",
       grossSalary: "Оклад (Gross)",
-      opv: "МЗЖ (ОПВ 10%)",
+      opv: `МЗЖ (ОПВ ${rate.opv})`,
       opvFull: "Міндетті зейнетақы жарнасы",
-      opvDesc: "Окладтың 10%-ы (макс 425 000 ₸)",
-      vosms: "МӘМСЖ (ВОСМС 2%)",
+      opvDesc: `Окладтың ${rate.opv}-ы (макс ${kk(opvCap)})`,
+      vosms: `МӘМСЖ (ВОСМС ${rate.vosms})`,
       vosmsFull: "Міндетті медсақтандыру жарнасы",
-      vosmsDesc: "Окладтың 2%-ы (макс 17 000 ₸)",
-      ipn: "ЖКН (ИПН 10%)",
+      vosmsDesc: `Окладтың ${rate.vosms}-ы (макс ${kk(vosmsCap)})`,
+      ipn: `ЖКН (ИПН ${rate.ipn})`,
       ipnFull: "Жеке табыс салығы",
-      ipnDesc: "Салық салынатын базаның 10%-ы",
-      standardDeduction: "14 АЕК шегерімі",
+      ipnDesc: `Салық салынатын базаның ${rate.ipn}-ы (${ipnHighMrp} АЕК/жыл асса — ${rate.ipnHigh})`,
+      standardDeduction: `${deductionMrp} АЕК шегерімі`,
       totalEmployeeTaxes: "Барлық ұсталымдар",
 
-      so: "ӘА (СО 3.5%)",
-      oosms: "МӘМСА (ООСМС 3%)",
-      opvr: "ЖМЗВ (ОПВР 1.5%)",
-      sn: "ӘС (СН)",
+      so: `ӘА (СО ${rate.so})`,
+      oosms: `МӘМСА (ООСМС ${rate.oosms})`,
+      opvr: `ЖМЗВ (ОПВР ${rate.opvr})`,
+      sn: `ӘС (СН ${rate.sn})`,
       totalEmployerTaxes: "Жұмыс беруші салықтары",
       totalEmployerCost: "Компанияның барлық шығыны",
 
@@ -167,43 +222,43 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         opv: {
           title: "Міндетті зейнетақы жарнасы (МЗЖ / ОПВ)",
-          desc: "БЖЗҚ-ға (ЕНПФ) қызметкердің жеке зейнетақы шотына аударылатын 10% жарна. Ең жоғарғы шегі — 50 ЕТЖ (425 000 ₸).",
-          formula: "Оклад × 10% (макс 425 000 ₸)",
+          desc: `БЖЗҚ-ға (ЕНПФ) қызметкердің жеке зейнетақы шотына аударылатын ${rate.opv} жарна. Ең жоғарғы шегі — ${C.opvMaxMzp} ЕТЖ (${kk(opvCap)}).`,
+          formula: `Оклад × ${rate.opv} (макс ${kk(opvCap)})`,
         },
         vosms: {
           title: "МӘМС жарнасы (МӘМСЖ / ВОСМС)",
-          desc: "Міндетті әлеуметтік медициналық сақтандыру қорына (ӘМСҚ) қызметкер жалақысынан ұсталатын 2% жарна. Ең жоғарғы шегі — 10 ЕТЖ (17 000 ₸).",
-          formula: "Оклад × 2% (макс 17 000 ₸)",
+          desc: `Міндетті әлеуметтік медициналық сақтандыру қорына (ӘМСҚ) қызметкер жалақысынан ұсталатын ${rate.vosms} жарна. Ең жоғарғы шегі — ${C.vosmsMaxMzp} ЕТЖ (${kk(vosmsCap)}).`,
+          formula: `Оклад × ${rate.vosms} (макс ${kk(vosmsCap)})`,
         },
         ipn: {
           title: "Жеке табыс салығы (ЖКН / ИПН)",
-          desc: "Мемлекеттік бюджетке төленетін 10% табыс салығы. Салық салынатын базадан МЗЖ, МӘМСЖ және 14 АЕК стандартты шегерім (55 048 ₸) алынып тасталады. Жалақы ≤ 25 АЕК болса 90% жеңілдік қолданылады.",
-          formula: "(Оклад − МЗЖ − МӘМСЖ − 14 АЕК) × 10%",
+          desc: `Мемлекеттік бюджетке төленетін ${rate.ipn} табыс салығы. Салық салынатын базадан МЗЖ, МӘМСЖ және ${deductionMrp} АЕК базалық шегерім (${kk(deductionAmount)}) алынып тасталады. Жылдық табыстың ${ipnHighMrp} АЕК-тен асатын бөлігіне (айына ≈ ${kk(ipnThreshold)}) ${rate.ipnHigh} мөлшерлеме қолданылады.`,
+          formula: `(Оклад − МЗЖ − МӘМСЖ − ${deductionMrp} АЕК) × ${rate.ipn}`,
         },
         totalEmployee: {
           title: "Жұмыскердің барлық ұсталымдары",
-          desc: "Қызметкер окладынан ұсталатын зейнетақы (10%), медициналық сақтандыру (2%) және табыс салығының (10%) жиынтығы.",
+          desc: `Қызметкер окладынан ұсталатын зейнетақы (${rate.opv}), медициналық сақтандыру (${rate.vosms}) және табыс салығының (${rate.ipn}) жиынтығы.`,
           formula: "МЗЖ + МӘМСЖ + ЖКН",
         },
         so: {
           title: "Әлеуметтік аударымдар (ӘА / СО)",
-          desc: "Мемлекеттік әлеуметтік сақтандыру қорына (МӘСҚ) жұмыс берушінің өз қаражаты есебінен төленетін 3.5% төлемі. База: 1 ЕТЖ-ден 7 ЕТЖ-ге дейін.",
-          formula: "(Оклад − МЗЖ) × 3.5%",
+          desc: `Мемлекеттік әлеуметтік сақтандыру қорына (МӘСҚ) жұмыс берушінің өз қаражаты есебінен төленетін ${rate.so} төлемі. База: ${C.soMinMzp} ЕТЖ-ден ${C.soMaxMzp} ЕТЖ-ге дейін.`,
+          formula: `(Оклад − МЗЖ) × ${rate.so}`,
         },
         oosms: {
           title: "Жұмыс берушінің МӘМС аударымы (МӘМСА / ООСМС)",
-          desc: "Медициналық сақтандыру қорына жұмыс беруші төлейтін 3% аударым. Қызметкердің жалақысынан ұсталмайды.",
-          formula: "Оклад × 3% (макс 25 500 ₸)",
+          desc: `Медициналық сақтандыру қорына жұмыс беруші төлейтін ${rate.oosms} аударым. Қызметкердің жалақысынан ұсталмайды. Ең жоғарғы шегі — ${C.oosmsMaxMzp} ЕТЖ.`,
+          formula: `Оклад × ${rate.oosms} (макс ${kk(oosmsCap)})`,
         },
         opvr: {
           title: "Жұмыс берушінің зейнетақы жарнасы (ЖМЗВ / ОПВР)",
-          desc: "1975 жылдан кейін туған жұмыскерлер үшін жұмыс берушінің өз есебінен төленетін 1.5% зейнетақы жарнасы.",
-          formula: "Оклад × 1.5%",
+          desc: `1975 жылдан кейін туған жұмыскерлер үшін жұмыс берушінің өз есебінен төленетін ${rate.opvr} зейнетақы жарнасы. Ең жоғарғы шегі — ${C.opvrMaxMzp} ЕТЖ.`,
+          formula: `Оклад × ${rate.opvr} (макс ${kk(opvrCap)})`,
         },
         sn: {
           title: "Әлеуметтік салық (ӘС / СН)",
-          desc: "Жұмыс беруші бюджетке төлейтін 9.5% салық (ОУР). Одан әлеуметтік аударымдар (ӘА) сомасы шегеріледі.",
-          formula: "(Оклад − МЗЖ − МӘМСЖ) × 9.5% − ӘА",
+          desc: `Жұмыс беруші бюджетке төлейтін ${rate.sn} салық (ЖБР). ${C.taxYear} жылдан бастап әлеуметтік аударымдар (ӘА) сомасы шегерілмейді.`,
+          formula: `(Оклад − МЗЖ − МӘМСЖ) × ${rate.sn}`,
         },
         totalEmployer: {
           title: "Компанияның барлық шығыны",
@@ -217,9 +272,21 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         copied: "Көшірілді!",
         shareLink: "Сілтемені бөлісу",
         linkCopied: "Сілтеме көшірілді!",
+        copyFailed: "Көшіру мүмкін болмады",
       },
 
-      ratesDisclaimer: "Шамамен: 1$ ≈ 500 ₸ · 1€ ≈ 545 ₸",
+      ratesDisclaimer: `Шамамен: ${usdEur("kk")}`,
+      liveTag: "Өзекті бағам",
+      perMonthShort: "/ ай",
+      perYearShort: "/ жыл",
+    },
+    og: {
+      perMonth: "/ айына",
+      perYear: "/ жыл",
+      yearlyNetDesc: "12 айлық таза табыс жиынтығы",
+      yearlyGrossDesc: "Жылдық барлық келісімшарт оклады",
+      deductionBadge: `${deductionMrp} АЕК шегерімі`,
+      noDeductionBadge: "Шегерімсіз",
     },
     footer: {
       madeBy: "Жоба авторы",
@@ -230,8 +297,8 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
   ru: {
     meta: {
-      title: "Теңге 💼 – Калькулятор зарплаты в Казахстане",
-      description: "Быстрый и удобный расчет зарплаты на руки и оклада (в месяц и за год), налогов (ОПВ, ИПН, ВОСМС) и эквивалентов в USD / EUR в Казахстане.",
+      title: "Теңге – Калькулятор зарплаты в Казахстане",
+      description: `Быстрый расчет зарплаты на руки и оклада (в месяц и за год), налогов (ОПВ, ИПН, ВОСМС) и эквивалентов в USD / EUR по правилам ${C.taxYear} года.`,
     },
     header: {
       title: "Теңге.work",
@@ -247,11 +314,11 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       grossInputHelp: "Введите сумму оклада до вычета налогов:",
       inputPlaceholder: "Например: 350 000",
       salaryPresetsTitle: "Частые суммы:",
-      mzpPresetLabel: "МЗП (85 тыс.)",
-      minSalaryWarning: "Не менее минимальной зарплаты (85 000 ₸)",
+      mzpPresetLabel: `МЗП (${mzp / 1000} тыс.)`,
+      minSalaryWarning: `Не менее минимальной зарплаты (${ru(mzp)})`,
 
-      deductionLabel: "Стандартный налоговый вычет 14 МРП",
-      deductionHint: "Уменьшает налог на 5 505 ₸ в месяц (база вычета 55 048 ₸)",
+      deductionLabel: `Базовый налоговый вычет ${deductionMrp} МРП`,
+      deductionHint: `Уменьшает налог на ${ru(deductionSaving)} в месяц (база вычета ${ru(deductionAmount)})`,
 
       monthlyNet: "Зарплата на руки (в месяц)",
       yearlyNet: "Зарплата на руки (за год)",
@@ -270,22 +337,22 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       netSalary: "На руки (Net)",
       grossSalary: "Оклад (Gross)",
-      opv: "ОПВ (10%)",
+      opv: `ОПВ (${rate.opv})`,
       opvFull: "Обязательные пенсионные взносы",
-      opvDesc: "10% от оклада (максимум до 425 000 ₸)",
-      vosms: "ВОСМС (2%)",
+      opvDesc: `${rate.opv} от оклада (максимум ${ru(opvCap)})`,
+      vosms: `ВОСМС (${rate.vosms})`,
       vosmsFull: "Взносы на медстрахование",
-      vosmsDesc: "2% от оклада (максимум до 17 000 ₸)",
-      ipn: "ИПН (10%)",
+      vosmsDesc: `${rate.vosms} от оклада (максимум ${ru(vosmsCap)})`,
+      ipn: `ИПН (${rate.ipn})`,
       ipnFull: "Индивидуальный подоходный налог",
-      ipnDesc: "10% от базы налогообложения",
-      standardDeduction: "Вычет 14 МРП",
+      ipnDesc: `${rate.ipn} от облагаемой базы (${rate.ipnHigh} свыше ${ipnHighMrp} МРП/год)`,
+      standardDeduction: `Вычет ${deductionMrp} МРП`,
       totalEmployeeTaxes: "Всего удержаний",
 
-      so: "СО (3.5%)",
-      oosms: "ООСМС (3%)",
-      opvr: "ОПВР (1.5%)",
-      sn: "СН",
+      so: `СО (${rate.so})`,
+      oosms: `ООСМС (${rate.oosms})`,
+      opvr: `ОПВР (${rate.opvr})`,
+      sn: `СН (${rate.sn})`,
       totalEmployerTaxes: "Налоги работодателя",
       totalEmployerCost: "Полные расходы компании",
 
@@ -302,18 +369,18 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         opv: {
           title: "Обязательные пенсионные взносы (ОПВ)",
-          desc: "10% от оклада, направляемые на индивидуальный пенсионный счет в ЕНПФ. Максимальный предел — 50 МЗП (425 000 ₸).",
-          formula: "Оклад × 10% (макс 425 000 ₸)",
+          desc: `${rate.opv} от оклада, направляемые на индивидуальный пенсионный счет в ЕНПФ. Максимальный предел — ${C.opvMaxMzp} МЗП (${ru(opvCap)}).`,
+          formula: `Оклад × ${rate.opv} (макс ${ru(opvCap)})`,
         },
         vosms: {
           title: "Взносы на медстрахование (ВОСМС)",
-          desc: "2% от оклада в Фонд обязательного медстрахования (ФСМС), удерживаемые из дохода работника. Максимальный предел — 10 МЗП (17 000 ₸).",
-          formula: "Оклад × 2% (макс 17 000 ₸)",
+          desc: `${rate.vosms} от оклада в Фонд обязательного медстрахования (ФСМС), удерживаемые из дохода работника. Максимальный предел — ${C.vosmsMaxMzp} МЗП (${ru(vosmsCap)}).`,
+          formula: `Оклад × ${rate.vosms} (макс ${ru(vosmsCap)})`,
         },
         ipn: {
           title: "Индивидуальный подоходный налог (ИПН)",
-          desc: "10% налог на доходы физлиц в бюджет. Рассчитывается от базы после вычета ОПВ, ВОСМС и 14 МРП (55 048 ₸). При окладе ≤ 25 МРП действует скидка 90%.",
-          formula: "(Оклад − ОПВ − ВОСМС − 14 МРП) × 10%",
+          desc: `${rate.ipn} налог на доходы физлиц в бюджет. Рассчитывается от базы после вычета ОПВ, ВОСМС и базового вычета ${deductionMrp} МРП (${ru(deductionAmount)}). С части годового дохода свыше ${ipnHighMrp} МРП (≈ ${ru(ipnThreshold)} в месяц) взимается ${rate.ipnHigh}.`,
+          formula: `(Оклад − ОПВ − ВОСМС − ${deductionMrp} МРП) × ${rate.ipn}`,
         },
         totalEmployee: {
           title: "Все удержания с работника",
@@ -322,23 +389,23 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         so: {
           title: "Социальные отчисления (СО)",
-          desc: "3.5% выплачивается работодателем за свой счет в Государственный фонд соцстрахования (ГФСС). База: от 1 до 7 МЗП.",
-          formula: "(Оклад − ОПВ) × 3.5%",
+          desc: `${rate.so} выплачивается работодателем за свой счет в Государственный фонд соцстрахования (ГФСС). База: от ${C.soMinMzp} до ${C.soMaxMzp} МЗП.`,
+          formula: `(Оклад − ОПВ) × ${rate.so}`,
         },
         oosms: {
           title: "Отчисления на медстрахование (ООСМС)",
-          desc: "3% от оклада за счет средств работодателя в Фонд медстрахования. Не удерживается из зарплаты сотрудника.",
-          formula: "Оклад × 3% (макс 25 500 ₸)",
+          desc: `${rate.oosms} от оклада за счет средств работодателя в Фонд медстрахования. Не удерживается из зарплаты сотрудника. Максимальная база — ${C.oosmsMaxMzp} МЗП.`,
+          formula: `Оклад × ${rate.oosms} (макс ${ru(oosmsCap)})`,
         },
         opvr: {
           title: "ОПВ работодателя (ОПВР)",
-          desc: "1.5% от оклада за счет работодателя для сотрудников, рожденных с 1975 года и позже.",
-          formula: "Оклад × 1.5%",
+          desc: `${rate.opvr} от оклада за счет работодателя для сотрудников, рожденных с 1975 года и позже. Максимальная база — ${C.opvrMaxMzp} МЗП.`,
+          formula: `Оклад × ${rate.opvr} (макс ${ru(opvrCap)})`,
         },
         sn: {
           title: "Социальный налог (СН)",
-          desc: "9.5% налог работодателя (ОУР) за вычетом суммы социальных отчислений (СО).",
-          formula: "(Оклад − ОПВ − ВОСМС) × 9.5% − СО",
+          desc: `${rate.sn} налог работодателя (ОУР). С ${C.taxYear} года не уменьшается на сумму социальных отчислений (СО).`,
+          formula: `(Оклад − ОПВ − ВОСМС) × ${rate.sn}`,
         },
         totalEmployer: {
           title: "Полные расходы компании",
@@ -352,9 +419,21 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         copied: "Скопировано!",
         shareLink: "Поделиться ссылкой",
         linkCopied: "Ссылка скопирована!",
+        copyFailed: "Не удалось скопировать",
       },
 
-      ratesDisclaimer: "Примерный курс: 1$ ≈ 500 ₸ · 1€ ≈ 545 ₸",
+      ratesDisclaimer: `Примерный курс: ${usdEur("ru")}`,
+      liveTag: "Актуальный курс",
+      perMonthShort: "/ мес",
+      perYearShort: "/ год",
+    },
+    og: {
+      perMonth: "/ месяц",
+      perYear: "/ год",
+      yearlyNetDesc: "Сумма чистого дохода за 12 месяцев",
+      yearlyGrossDesc: "Годовой оклад по трудовому договору",
+      deductionBadge: `Вычет ${deductionMrp} МРП`,
+      noDeductionBadge: "Без вычета",
     },
     footer: {
       madeBy: "Создатель проекта",
@@ -365,8 +444,8 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
   en: {
     meta: {
-      title: "Tenge 💼 – Kazakhstan Salary & Tax Calculator",
-      description: "Quick & simple salary calculator for Kazakhstan: monthly and yearly take-home pay, gross salary, taxes (OPV, IPN, VOSMS), and USD/EUR conversions.",
+      title: "Tenge – Kazakhstan Salary & Tax Calculator",
+      description: `Quick & simple ${C.taxYear} salary calculator for Kazakhstan: monthly and yearly take-home pay, gross salary, taxes (OPV, IPN, VOSMS), and USD/EUR conversions.`,
     },
     header: {
       title: "Tenge.work",
@@ -382,11 +461,11 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       grossInputHelp: "Enter monthly gross contract salary:",
       inputPlaceholder: "E.g.: 350,000",
       salaryPresetsTitle: "Popular amounts:",
-      mzpPresetLabel: "Min Wage (85k)",
-      minSalaryWarning: "Minimum salary in Kazakhstan is 85,000 ₸",
+      mzpPresetLabel: `Min Wage (${mzp / 1000}k)`,
+      minSalaryWarning: `Minimum salary in Kazakhstan is ${en(mzp)}`,
 
-      deductionLabel: "14 MRP standard personal tax relief",
-      deductionHint: "Reduces income tax by 5,505 ₸/mo (55,048 ₸ relief base)",
+      deductionLabel: `${deductionMrp} MRP basic tax deduction`,
+      deductionHint: `Reduces income tax by ${en(deductionSaving)}/mo (${en(deductionAmount)} deduction base)`,
 
       monthlyNet: "Take-Home Pay (Monthly)",
       yearlyNet: "Take-Home Pay (Yearly)",
@@ -407,20 +486,20 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
       grossSalary: "Gross Salary",
       opv: "OPV (Pension)",
       opvFull: "Mandatory Pension Contribution",
-      opvDesc: "10% of gross (capped at 425,000 ₸)",
+      opvDesc: `${rate.opv} of gross (capped at ${en(opvCap)})`,
       vosms: "VOSMS (Health)",
       vosmsFull: "Health Insurance Contribution",
-      vosmsDesc: "2% of gross (capped at 17,000 ₸)",
+      vosmsDesc: `${rate.vosms} of gross (capped at ${en(vosmsCap)})`,
       ipn: "IPN (Income Tax)",
       ipnFull: "Personal Income Tax",
-      ipnDesc: "10% of taxable base",
-      standardDeduction: "14 MRP Relief",
+      ipnDesc: `${rate.ipn} of taxable base (${rate.ipnHigh} above ${ipnHighMrp} MRP/yr)`,
+      standardDeduction: `${deductionMrp} MRP Deduction`,
       totalEmployeeTaxes: "Total Deductions",
 
-      so: "SO (3.5%)",
-      oosms: "OOSMS (3%)",
-      opvr: "OPVR (1.5%)",
-      sn: "Social Tax (SN)",
+      so: `SO (${rate.so})`,
+      oosms: `OOSMS (${rate.oosms})`,
+      opvr: `OPVR (${rate.opvr})`,
+      sn: `Social Tax (SN ${rate.sn})`,
       totalEmployerTaxes: "Employer Taxes",
       totalEmployerCost: "Total Employer Expense",
 
@@ -437,18 +516,18 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         opv: {
           title: "Mandatory Pension Contribution (OPV)",
-          desc: "10% pension contribution deposited to the employee's personal UAPF retirement account. Capped at 50 minimum wages (425,000 ₸).",
-          formula: "Gross × 10% (cap 425,000 ₸)",
+          desc: `${rate.opv} pension contribution deposited to the employee's personal UAPF retirement account. Capped at ${C.opvMaxMzp} minimum wages (${en(opvCap)}).`,
+          formula: `Gross × ${rate.opv} (cap ${en(opvCap)})`,
         },
         vosms: {
           title: "Employee Health Insurance (VOSMS)",
-          desc: "2% mandatory health insurance contribution paid by the employee to FSMS. Capped at 10 minimum wages (17,000 ₸).",
-          formula: "Gross × 2% (cap 17,000 ₸)",
+          desc: `${rate.vosms} mandatory health insurance contribution paid by the employee to FSMS. Capped at ${C.vosmsMaxMzp} minimum wages (${en(vosmsCap)}).`,
+          formula: `Gross × ${rate.vosms} (cap ${en(vosmsCap)})`,
         },
         ipn: {
           title: "Personal Income Tax (IPN)",
-          desc: "10% state personal income tax. Calculated on taxable base after subtracting OPV, VOSMS, and the 14 MRP relief (55,048 ₸). 90% discount applies if salary ≤ 25 MRP.",
-          formula: "(Gross − OPV − VOSMS − 14 MRP) × 10%",
+          desc: `${rate.ipn} state personal income tax, calculated on the taxable base after subtracting OPV, VOSMS, and the ${deductionMrp} MRP basic deduction (${en(deductionAmount)}). Annual income above ${ipnHighMrp} MRP (≈ ${en(ipnThreshold)}/mo) is taxed at ${rate.ipnHigh}.`,
+          formula: `(Gross − OPV − VOSMS − ${deductionMrp} MRP) × ${rate.ipn}`,
         },
         totalEmployee: {
           title: "Total Employee Deductions",
@@ -457,23 +536,23 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         },
         so: {
           title: "Social Contributions (SO)",
-          desc: "3.5% social contribution paid directly by the employer to GFSS. Base: min 1 MZP, max 7 MZP.",
-          formula: "(Gross − OPV) × 3.5%",
+          desc: `${rate.so} social contribution paid directly by the employer to GFSS. Base: min ${C.soMinMzp} MZP, max ${C.soMaxMzp} MZP.`,
+          formula: `(Gross − OPV) × ${rate.so}`,
         },
         oosms: {
           title: "Employer Health Contribution (OOSMS)",
-          desc: "3% healthcare contribution paid directly by the employer. Not deducted from employee salary.",
-          formula: "Gross × 3% (cap 25,500 ₸)",
+          desc: `${rate.oosms} healthcare contribution paid directly by the employer. Not deducted from employee salary. Base capped at ${C.oosmsMaxMzp} MZP.`,
+          formula: `Gross × ${rate.oosms} (cap ${en(oosmsCap)})`,
         },
         opvr: {
           title: "Employer Pension Contribution (OPVR)",
-          desc: "1.5% supplementary pension contribution paid by the employer for employees born in 1975 or later.",
-          formula: "Gross × 1.5%",
+          desc: `${rate.opvr} supplementary pension contribution paid by the employer for employees born in 1975 or later. Base capped at ${C.opvrMaxMzp} MZP.`,
+          formula: `Gross × ${rate.opvr} (cap ${en(opvrCap)})`,
         },
         sn: {
           title: "Social Tax (SN)",
-          desc: "9.5% employer state tax (General regime) reduced by the Social Contribution (SO) amount.",
-          formula: "(Gross − OPV − VOSMS) × 9.5% − SO",
+          desc: `${rate.sn} employer state tax (general regime). Since ${C.taxYear} it is no longer reduced by the Social Contribution (SO) amount.`,
+          formula: `(Gross − OPV − VOSMS) × ${rate.sn}`,
         },
         totalEmployer: {
           title: "Total Company Payroll Cost",
@@ -487,9 +566,21 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
         copied: "Copied!",
         shareLink: "Share Link",
         linkCopied: "Link Copied!",
+        copyFailed: "Couldn't copy to clipboard",
       },
 
-      ratesDisclaimer: "Approx: $1 ≈ 500 ₸ · €1 ≈ 545 ₸",
+      ratesDisclaimer: `Approx: ${usdEur("en")}`,
+      liveTag: "Live rate",
+      perMonthShort: "/ mo",
+      perYearShort: "/ yr",
+    },
+    og: {
+      perMonth: "/ mo",
+      perYear: "/ yr",
+      yearlyNetDesc: "12-month total take-home pay",
+      yearlyGrossDesc: "Total annual contract gross salary",
+      deductionBadge: `${deductionMrp} MRP Deduction`,
+      noDeductionBadge: "No Deduction",
     },
     footer: {
       madeBy: "Created by",
@@ -506,13 +597,13 @@ export function getLocale(): SupportedLocale {
 
   const urlParams = new URLSearchParams(window.location.search);
   const paramLang = urlParams.get("lang");
-  if (paramLang && (paramLang === "kk" || paramLang === "ru" || paramLang === "en")) {
-    return paramLang;
-  }
+  if (isSupportedLocale(paramLang)) return paramLang;
 
-  const savedLang = localStorage.getItem("tenge_locale");
-  if (savedLang && (savedLang === "kk" || savedLang === "ru" || savedLang === "en")) {
-    return savedLang as SupportedLocale;
+  try {
+    const savedLang = localStorage.getItem("tenge_locale");
+    if (isSupportedLocale(savedLang)) return savedLang;
+  } catch {
+    // Storage unavailable (private mode, blocked cookies)
   }
 
   return DEFAULT_LOCALE;
@@ -520,6 +611,10 @@ export function getLocale(): SupportedLocale {
 
 export function setLocale(locale: SupportedLocale): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem("tenge_locale", locale);
+  try {
+    localStorage.setItem("tenge_locale", locale);
+  } catch {
+    // Storage unavailable
+  }
   document.documentElement.lang = locale;
 }

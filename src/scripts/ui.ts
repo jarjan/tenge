@@ -3,23 +3,28 @@ import {
   calculateFromNet,
   fetchLiveExchangeRates,
   formatCurrency,
+  formatNumber,
   formatUsdEur,
   formatUsd,
   formatEur,
   DEFAULT_RATES,
+  MAX_AMOUNT,
+  MIN_AMOUNT,
   type ExchangeRates,
   type SalaryBreakdown,
 } from "./calculator";
 import {
   DEFAULT_LOCALE,
   getLocale,
+  isSupportedLocale,
   setLocale,
   translations,
   type SupportedLocale,
 } from "./i18n";
+import { DEFAULT_AMOUNT, parseCalcParams, type CalcMode } from "./params";
 
 export interface AppState {
-  mode: "net" | "gross";
+  mode: CalcMode;
   amount: number;
   useDeduction: boolean;
   locale: SupportedLocale;
@@ -29,28 +34,30 @@ export interface AppState {
 
 let state: AppState = {
   mode: "net",
-  amount: 350000,
+  amount: DEFAULT_AMOUNT,
   useDeduction: true,
   locale: DEFAULT_LOCALE,
   theme: "dark",
   rates: DEFAULT_RATES,
 };
 
+const numberLocale = (locale: SupportedLocale): string => (locale === "en" ? "en-US" : "ru-RU");
+
 /**
  * Shows a toast message
  */
-function showToast(message: string): void {
+function showToast(message: string, isError = false): void {
   const container = document.getElementById("toast-container");
   if (!container) return;
 
   const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerHTML = `
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
-    <span>${message}</span>
-  `;
+  toast.className = isError ? "toast toast-error" : "toast";
+  toast.innerHTML = isError
+    ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+    : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+  const text = document.createElement("span");
+  text.textContent = message;
+  toast.appendChild(text);
 
   container.appendChild(toast);
 
@@ -68,26 +75,18 @@ function showToast(message: string): void {
 function loadStateFromUrl(): void {
   if (typeof window === "undefined") return;
 
-  const params = new URLSearchParams(window.location.search);
-  const modeParam = params.get("mode");
-  if (modeParam === "net" || modeParam === "gross") {
-    state.mode = modeParam;
-  }
-
-  const amountParam = params.get("amount") || params.get("salary");
-  if (amountParam && !isNaN(Number(amountParam))) {
-    const val = Number(amountParam);
-    if (val > 0) state.amount = Math.max(85000, val);
-  }
-
-  const deductionParam = params.get("deduction");
-  if (deductionParam !== null) {
-    state.useDeduction = deductionParam !== "false" && deductionParam !== "0";
-  }
-
+  const params = parseCalcParams(new URLSearchParams(window.location.search));
+  state.mode = params.mode;
+  state.amount = params.amount;
+  state.useDeduction = params.useDeduction;
   state.locale = getLocale();
 
-  const savedTheme = localStorage.getItem("tenge_theme");
+  let savedTheme: string | null = null;
+  try {
+    savedTheme = localStorage.getItem("tenge_theme");
+  } catch {
+    // Storage unavailable
+  }
   if (savedTheme === "light" || savedTheme === "dark") {
     state.theme = savedTheme;
   } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
@@ -115,20 +114,44 @@ function updateUrlParams(): void {
 }
 
 /**
+ * Formats the salary input with thousands separators while keeping the caret
+ * after the same digit the user was editing.
+ */
+function formatInputInPlace(input: HTMLInputElement, value: number): void {
+  const caret = input.selectionStart ?? input.value.length;
+  const digitsBeforeCaret = input.value.slice(0, caret).replace(/\D/g, "").length;
+  const formatted = value > 0 ? value.toLocaleString(numberLocale(state.locale)) : "";
+  input.value = formatted;
+
+  let pos = 0;
+  let seen = 0;
+  while (pos < formatted.length && seen < digitsBeforeCaret) {
+    if (/\d/.test(formatted[pos])) seen++;
+    pos++;
+  }
+  input.setSelectionRange(pos, pos);
+}
+
+function calculate(): SalaryBreakdown {
+  const options = { useStandardDeduction: state.useDeduction };
+  return state.mode === "net"
+    ? calculateFromNet(state.amount, options)
+    : calculateFromGross(state.amount, options);
+}
+
+/**
  * Recalculates and updates the entire UI
  */
 export function render(): void {
   const t = translations[state.locale];
 
   // 1. Calculate breakdown
-  const breakdown: SalaryBreakdown = state.mode === "net"
-    ? calculateFromNet(state.amount, { useStandardDeduction: state.useDeduction })
-    : calculateFromGross(state.amount, { useStandardDeduction: state.useDeduction });
+  const breakdown = calculate();
 
   // 2. Update Input elements
   const inputEl = document.getElementById("salary-input") as HTMLInputElement | null;
   if (inputEl && document.activeElement !== inputEl) {
-    inputEl.value = state.amount > 0 ? state.amount.toLocaleString(state.locale === "en" ? "en-US" : "ru-RU") : "";
+    inputEl.value = state.amount > 0 ? state.amount.toLocaleString(numberLocale(state.locale)) : "";
   }
 
   const inputHelpEl = document.getElementById("input-help-text");
@@ -139,13 +162,20 @@ export function render(): void {
   // 3. Update Mode Pills
   const netModeBtn = document.getElementById("mode-btn-net");
   const grossModeBtn = document.getElementById("mode-btn-gross");
-  if (netModeBtn) netModeBtn.classList.toggle("active", state.mode === "net");
-  if (grossModeBtn) grossModeBtn.classList.toggle("active", state.mode === "gross");
+  if (netModeBtn) {
+    netModeBtn.classList.toggle("active", state.mode === "net");
+    netModeBtn.setAttribute("aria-checked", String(state.mode === "net"));
+  }
+  if (grossModeBtn) {
+    grossModeBtn.classList.toggle("active", state.mode === "gross");
+    grossModeBtn.setAttribute("aria-checked", String(state.mode === "gross"));
+  }
 
   // 4. Update Preset Chips
   document.querySelectorAll<HTMLButtonElement>(".preset-chip").forEach((chip) => {
     const val = Number(chip.dataset.value);
     chip.classList.toggle("active", val === state.amount);
+    if (!chip.dataset.i18n) chip.textContent = formatCurrency(val, state.locale);
   });
 
   // 5. Update Deduction toggle
@@ -200,10 +230,10 @@ export function render(): void {
   // 9. Update Rates Disclaimer with exact live rate
   const ratesEl = document.getElementById("rates-disclaimer-text");
   if (ratesEl) {
-    const usdRounded = Math.round(state.rates.usd);
-    const eurRounded = Math.round(state.rates.eur);
-    const liveTag = state.rates.isLive ? " • Live" : "";
-    ratesEl.textContent = `1$ ≈ ${usdRounded} ₸ · 1€ ≈ ${eurRounded} ₸${liveTag}`;
+    const usd = formatNumber(state.rates.usd, state.locale);
+    const eur = formatNumber(state.rates.eur, state.locale);
+    const liveTag = state.rates.isLive ? ` • ${t.calculator.liveTag}` : "";
+    ratesEl.textContent = `1$ ≈ ${usd} ₸ · 1€ ≈ ${eur} ₸${liveTag}`;
   }
 
   // 10. Update Distribution Bar & Percentage Badges
@@ -262,7 +292,9 @@ export function render(): void {
 
   // 11. Update Language Switcher UI
   document.querySelectorAll<HTMLButtonElement>(".lang-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.lang === state.locale);
+    const isActive = btn.dataset.lang === state.locale;
+    btn.classList.toggle("active", isActive);
+    btn.setAttribute("aria-pressed", String(isActive));
   });
 
   // 12. Update Theme & Lang attributes
@@ -308,33 +340,58 @@ export function applyTranslations(): void {
 }
 
 /**
+ * Writes text to the clipboard, falling back to execCommand where the async
+ * Clipboard API is unavailable (insecure context, older browsers).
+ */
+async function writeClipboard(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const ok = document.execCommand("copy");
+  textarea.remove();
+  if (!ok) throw new Error("Copy command failed");
+}
+
+function copyWithToast(text: string, successMessage: string): void {
+  const t = translations[state.locale];
+  writeClipboard(text)
+    .then(() => showToast(successMessage))
+    .catch(() => showToast(t.calculator.actions.copyFailed, true));
+}
+
+/**
  * Copy calculation summary text to clipboard
  */
 export function copyCalculationSummary(): void {
   const t = translations[state.locale];
-  const breakdown = state.mode === "net"
-    ? calculateFromNet(state.amount, { useStandardDeduction: state.useDeduction })
-    : calculateFromGross(state.amount, { useStandardDeduction: state.useDeduction });
+  const breakdown = calculate();
+  const mo = t.calculator.perMonthShort;
+  const yr = t.calculator.perYearShort;
 
-  const summaryText = `💼 tenge.work
-═════════════════════════════════
-💵 ${t.calculator.monthlyNet}: ${formatCurrency(breakdown.netSalary, state.locale)} (${formatUsd(breakdown.netSalary, state.rates.usd)} / ${formatEur(breakdown.netSalary, state.rates.eur)})
-🗓️ ${t.calculator.yearlyNet}: ${formatCurrency(breakdown.netSalary * 12, state.locale)} (${formatUsd(breakdown.netSalary * 12, state.rates.usd)} / ${formatEur(breakdown.netSalary * 12, state.rates.eur)})
-─────────────────────────────────
-📄 ${t.calculator.monthlyGross}: ${formatCurrency(breakdown.grossSalary, state.locale)}
-🗓️ ${t.calculator.yearlyGross}: ${formatCurrency(breakdown.grossSalary * 12, state.locale)}
+  const summaryText = `tenge.work
 
-📉 ${t.calculator.colItem}:
-• ${t.calculator.opv}: ${formatCurrency(breakdown.opv, state.locale)} / mo
-• ${t.calculator.vosms}: ${formatCurrency(breakdown.vosms, state.locale)} / mo
-• ${t.calculator.ipn}: ${formatCurrency(breakdown.ipn, state.locale)} / mo
-• ${t.calculator.totalEmployeeTaxes}: ${formatCurrency(breakdown.totalEmployeeDeductions, state.locale)} / mo (${formatCurrency(breakdown.totalEmployeeDeductions * 12, state.locale)} / yr)
-═════════════════════════════════
-🔗 ${window.location.href}`;
+${t.calculator.monthlyNet}: ${formatCurrency(breakdown.netSalary, state.locale)} (${formatUsd(breakdown.netSalary, state.rates.usd)} / ${formatEur(breakdown.netSalary, state.rates.eur)})
+${t.calculator.yearlyNet}: ${formatCurrency(breakdown.netSalary * 12, state.locale)} (${formatUsd(breakdown.netSalary * 12, state.rates.usd)} / ${formatEur(breakdown.netSalary * 12, state.rates.eur)})
+${t.calculator.monthlyGross}: ${formatCurrency(breakdown.grossSalary, state.locale)}
+${t.calculator.yearlyGross}: ${formatCurrency(breakdown.grossSalary * 12, state.locale)}
 
-  navigator.clipboard.writeText(summaryText).then(() => {
-    showToast(t.calculator.actions.copied);
-  });
+${t.calculator.opv}: ${formatCurrency(breakdown.opv, state.locale)} ${mo}
+${t.calculator.vosms}: ${formatCurrency(breakdown.vosms, state.locale)} ${mo}
+${t.calculator.ipn}: ${formatCurrency(breakdown.ipn, state.locale)} ${mo}
+${t.calculator.totalEmployeeTaxes}: ${formatCurrency(breakdown.totalEmployeeDeductions, state.locale)} ${mo} (${formatCurrency(breakdown.totalEmployeeDeductions * 12, state.locale)} ${yr})
+
+${window.location.href}`;
+
+  copyWithToast(summaryText, t.calculator.actions.copied);
 }
 
 /**
@@ -342,9 +399,7 @@ export function copyCalculationSummary(): void {
  */
 export function shareCurrentUrl(): void {
   const t = translations[state.locale];
-  navigator.clipboard.writeText(window.location.href).then(() => {
-    showToast(t.calculator.actions.linkCopied);
-  });
+  copyWithToast(window.location.href, t.calculator.actions.linkCopied);
 }
 
 /**
@@ -365,13 +420,24 @@ export function initApp(): void {
   const minWarning = document.getElementById("min-salary-warning");
 
   if (salaryInput) {
-    salaryInput.addEventListener("input", (e) => {
-      const target = e.target as HTMLInputElement;
-      const cleanVal = target.value.replace(/\D/g, "");
-      const num = Number(cleanVal) || 0;
-      state.amount = num;
+    // Let Backspace/Delete skip over thousands separators instead of being undone by reformatting
+    salaryInput.addEventListener("keydown", (e) => {
+      const { selectionStart: start, selectionEnd: end, value } = salaryInput;
+      if (start === null || start !== end) return;
+      if (e.key === "Backspace" && start > 0 && /\D/.test(value[start - 1])) {
+        salaryInput.setSelectionRange(start - 1, start - 1);
+      } else if (e.key === "Delete" && start < value.length && /\D/.test(value[start])) {
+        salaryInput.setSelectionRange(start + 1, start + 1);
+      }
+    });
 
-      if (num > 0 && num < 85000) {
+    salaryInput.addEventListener("input", () => {
+      const cleanVal = salaryInput.value.replace(/\D/g, "");
+      const num = Math.min(MAX_AMOUNT, Number(cleanVal) || 0);
+      state.amount = num;
+      formatInputInPlace(salaryInput, num);
+
+      if (num > 0 && num < MIN_AMOUNT) {
         if (minWarning) minWarning.style.display = "flex";
       } else {
         if (minWarning) minWarning.style.display = "none";
@@ -381,8 +447,8 @@ export function initApp(): void {
     });
 
     salaryInput.addEventListener("blur", () => {
-      if (state.amount < 85000) {
-        state.amount = 85000;
+      if (state.amount < MIN_AMOUNT) {
+        state.amount = MIN_AMOUNT;
         if (minWarning) minWarning.style.display = "none";
       }
       render();
@@ -420,11 +486,14 @@ export function initApp(): void {
   // 5. Language Switcher Buttons
   document.querySelectorAll<HTMLButtonElement>(".lang-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const lang = btn.dataset.lang as SupportedLocale;
-      if (lang && (lang === "kk" || lang === "ru" || lang === "en")) {
+      const lang = btn.dataset.lang;
+      if (isSupportedLocale(lang)) {
         state.locale = lang;
         setLocale(lang);
         applyTranslations();
+        if (salaryInput && state.amount > 0) {
+          salaryInput.value = state.amount.toLocaleString(numberLocale(state.locale));
+        }
       }
     });
   });
@@ -432,7 +501,11 @@ export function initApp(): void {
   // 7. Theme Toggle Button
   document.getElementById("theme-toggle-btn")?.addEventListener("click", () => {
     state.theme = state.theme === "dark" ? "light" : "dark";
-    localStorage.setItem("tenge_theme", state.theme);
+    try {
+      localStorage.setItem("tenge_theme", state.theme);
+    } catch {
+      // Storage unavailable
+    }
     document.documentElement.setAttribute("data-theme", state.theme);
   });
 
@@ -510,6 +583,11 @@ export function showTaxTooltip(tooltipId: string, triggerEl: HTMLElement): void 
   if (formulaEl) formulaEl.textContent = item.formula;
 
   if (!tooltip) return;
+
+  document
+    .querySelectorAll('[aria-describedby="tax-info-popover"]')
+    .forEach((el) => el.removeAttribute("aria-describedby"));
+  triggerEl.setAttribute("aria-describedby", "tax-info-popover");
 
   tooltip.dataset.activeId = tooltipId;
   tooltip.style.display = "block";

@@ -14,13 +14,14 @@ A modern, fast, and accessible Kazakhstani tenge (KZT) salary and tax calculator
 - 🔄 **Dual Direction Calculation**:
   - **Take-Home (Net) ➔ Gross Salary**: calculate contract salary and taxes from your net pay.
   - **Gross Salary ➔ Take-Home (Net)**: calculate actual take-home pay and all deductions from gross contract amount.
-- 📊 **Comprehensive 2025/2026 Kazakhstan Tax Rules**:
-  - **Employee Deductions**: OPV (10%), VOSMS (2%), IPN (10%), with 14 MRP standard tax relief toggle and 90% correction for small salaries (<= 25 MRP).
-  - **Employer Contributions**: SO (3.5%), OOSMS (3%), OPVR (1.5%), and Social Tax (SN).
+- 📊 **2026 Kazakhstan Tax Rules** (new Tax Code, effective 1 January 2026):
+  - **Employee Deductions**: OPV (10%), VOSMS (2%), IPN (10%, 15% above 8 500 MRP/year), with a 30 MRP basic deduction toggle.
+  - **Employer Contributions**: SO (5%), OOSMS (3%), OPVR (3.5%), and Social Tax (SN 6%, no longer offset by SO).
+  - All rates, caps and indices live in `TAX_RULES_2026` in `src/scripts/calculator.ts`; UI copy is derived from it.
 - 📱 **Mobile-First & Accessible**: Designed for quick one-thumb usage with 48px+ touch targets, numeric keypads (`inputmode="numeric"`), and zero layout shifts.
-- 🌓 **Dark & Light Mode**: Bespoke glassmorphism theme with automatic system preference detection.
+- 🌓 **Dark & Light Mode**: Flat, neutral theme with a single Kazakh sky-blue accent and automatic system preference detection.
 - 📋 **Share & Export**: One-tap copy calculation summary to clipboard and URL query params sync (`?amount=500000&mode=net&lang=kk`).
-- ⚡ **Lightning Fast**: Powered by **Astro 5+** with zero-overhead static generation and minimal client scripts.
+- ⚡ **Lightning Fast**: Powered by **Astro 7**, server-rendered in the requested language with minimal client scripts.
 
 ---
 
@@ -44,8 +45,9 @@ npm install
 # 3. Start local development server
 npm run dev
 
-# 4. Check types
+# 4. Check types and run tests
 npm run check
+npm test
 
 # 5. Build for production
 npm run build

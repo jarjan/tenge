@@ -3,14 +3,19 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Calculator from "../components/Calculator.astro";
 import Footer from "../components/Footer.astro";
+import { parseCalcParams } from "../scripts/params";
 
 export const prerender = false;
+
+// Render the requested locale and amounts on the server so the first paint
+// (and link-preview crawlers) see the right language and numbers.
+const params = parseCalcParams(Astro.url.searchParams);
 ---
 
-<Layout>
+<Layout params={params}>
   <main class="app-container">
-    <Header />
-    <Calculator />
-    <Footer />
+    <Header locale={params.locale} />
+    <Calculator params={params} />
+    <Footer locale={params.locale} />
   </main>
 </Layout>

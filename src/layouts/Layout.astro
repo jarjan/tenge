@@ -1,32 +1,40 @@
 ---
 import "../styles/global.css";
 import "../styles/calculator.css";
+import {
+  DEFAULT_LOCALE,
+  SUPPORTED_LOCALES,
+  translations,
+  type SupportedLocale,
+} from "../scripts/i18n";
+import { buildOgImageUrl, type CalcParams } from "../scripts/params";
 
 interface Props {
-  title?: string;
-  description?: string;
+  params: CalcParams;
 }
 
-const {
-  title = "Теңге 💼 – Қазақстандағы жалақы калькуляторы",
-  description = "Қазақстандағы жалақыңызды, салықтарды (МЗЖ/ОПВ, ЖКН/ИПН, МӘМС/ВОСМС) және жұмыс берушінің шығындарын жылдам әрі дәл есептеңіз.",
-} = Astro.props;
+const { params } = Astro.props;
+const t = translations[params.locale];
+const title = t.meta.title;
+const description = t.meta.description;
 
-// Build dynamic OG URL based on request params
 const url = Astro.url;
-const amountParam = url.searchParams.get("amount") || url.searchParams.get("salary") || "350000";
-const modeParam = url.searchParams.get("mode") || "net";
-const langParam = url.searchParams.get("lang") || "kk";
+const site = Astro.site ?? url.origin;
+const dynamicOgUrl = buildOgImageUrl(site, params);
 
-const dynamicOgUrl = `https://tenge.work/api/og.png?amount=${encodeURIComponent(amountParam)}&mode=${encodeURIComponent(modeParam)}&lang=${encodeURIComponent(langParam)}`;
+const localeHref = (locale: SupportedLocale): string => {
+  const href = new URL("/", site);
+  if (locale !== DEFAULT_LOCALE) href.searchParams.set("lang", locale);
+  return href.toString();
+};
 ---
 
 <!doctype html>
-<html lang="kk" data-theme="dark">
+<html lang={params.locale} data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="light dark" />
     
     <!-- Primary Meta Tags -->
     <title>{title}</title>
@@ -34,6 +42,9 @@ const dynamicOgUrl = `https://tenge.work/api/og.png?amount=${encodeURIComponent(
     <meta name="description" content={description} />
     <meta name="keywords" content="salary calculator kazakhstan, жалақы есептеуіш қазақстан, налоговый калькулятор казахстан, опв, ипн, восмс, tenge salary, tenge work" />
     <meta name="author" content="Zharzhan Kulmyrza" />
+    <link rel="canonical" href={localeHref(params.locale)} />
+    {SUPPORTED_LOCALES.map((l) => <link rel="alternate" hreflang={l} href={localeHref(l)} />)}
+    <link rel="alternate" hreflang="x-default" href={localeHref(DEFAULT_LOCALE)} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -46,7 +57,8 @@ const dynamicOgUrl = `https://tenge.work/api/og.png?amount=${encodeURIComponent(
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="tenge.work - Kazakhstan Salary & Tax Calculator" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content={params.locale === "en" ? "en_US" : params.locale === "ru" ? "ru_RU" : "kk_KZ"} />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -54,7 +66,7 @@ const dynamicOgUrl = `https://tenge.work/api/og.png?amount=${encodeURIComponent(
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={dynamicOgUrl} />
-    <meta property="twitter:image:alt" content="tenge.work - Kazakhstan Salary & Tax Calculator" />
+    <meta property="twitter:image:alt" content={title} />
 
     <!-- Favicon & Icons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -64,7 +76,7 @@ const dynamicOgUrl = `https://tenge.work/api/og.png?amount=${encodeURIComponent(
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <!-- Bootstrap theme script to prevent flash of unstyled theme -->
     <script is:inline>
@@ -79,8 +91,8 @@ const dynamicOgUrl = `https://tenge.work/api/og.png?amount=${encodeURIComponent(
         const urlParams = new URLSearchParams(window.location.search);
         const langParam = urlParams.get('lang');
         const savedLang = localStorage.getItem('tenge_locale');
-        const lang = langParam || savedLang || 'kk';
-        if (['kk', 'ru', 'en'].includes(lang)) {
+        const lang = langParam || savedLang;
+        if (lang && ['kk', 'ru', 'en'].includes(lang)) {
           document.documentElement.lang = lang;
         }
       } catch (e) {}

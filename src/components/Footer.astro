@@ -1,24 +1,31 @@
 ---
+import { translations, type SupportedLocale } from "../scripts/i18n";
+
+interface Props {
+  locale: SupportedLocale;
+}
+
+const t = translations[Astro.props.locale].footer;
 const currentYear = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="footer-links">
     <div>
-      <span data-i18n="footer.madeBy">Жоба авторы</span>:
-      <a href="https://jarjan.xyz" target="_blank"> jarjan </a>
+      <span data-i18n="footer.madeBy">{t.madeBy}</span>:
+      <a href="https://jarjan.xyz" target="_blank" rel="noopener"> jarjan </a>
       •
       <a
         href="https://github.com/jarjan/tenge"
         target="_blank"
+        rel="noopener"
         data-i18n="footer.sourceCode"
       >
-        GitHub
+        {t.sourceCode}
       </a>
     </div>
     <p class="footer-disclaimer" data-i18n="footer.disclaimer">
-      Калькулятор жуықталған есепті көрсетеді. Нақты мәліметтер үшін өз
-      есепшіңізбен кеңесіңіз.
+      {t.disclaimer}
     </p>
     <small class="footer-copy">© {currentYear} tenge.work</small>
   </div>
