@@ -1,67 +1,87 @@
+/*
+ * Money flow: a fixed dark control pane beside a quiet results sheet.
+ * Colour carries meaning: green is take-home, blue is the pension account,
+ * rust goes to the state and social funds.
+ */
 :root {
   /* Light (default) */
-  --bg-page: #f4f4f1;
+  --bg-page: #f3f4f1;
   --bg-surface: #ffffff;
-  --bg-subtle: #efefeb;
+  --bg-subtle: #e9ebe7;
   --bg-input: #ffffff;
-  --bg-hover: #e8e8e3;
+  --bg-hover: #e3e6e1;
 
-  --border-color: #e2e2dc;
-  --border-strong: #cfcfc7;
-  --border-focus: #00829a;
+  --border-color: #dde0db;
+  --border-strong: #c4c9c3;
+  --border-focus: #0f7a5c;
 
-  --text-primary: #17191b;
-  --text-secondary: #55585c;
-  --text-muted: #85888c;
+  --text-primary: #141a18;
+  --text-secondary: #4d5752;
+  --text-muted: #79827d;
   --text-inverse: #ffffff;
 
-  /* Single accent: Kazakh sky blue, darkened for legible text */
-  --accent: #00829a;
-  --accent-soft: rgba(0, 130, 154, 0.1);
-  --gold: #d9a400;
+  --accent: #0f7a5c;
   --danger: #c2413b;
 
-  /* Distribution: net in accent, deductions in graded neutrals */
-  --color-net: var(--accent);
-  --color-opv: #5f6368;
-  --color-vosms: #9a9da1;
-  --color-ipn: #c3c5c8;
+  /* Where the money goes */
+  --flow-yours: #0f7a5c;
+  --flow-pension: #2f64a8;
+  --flow-state: #b4532a;
+  --flow-total: #141a18;
+  --flow-track: #e6e9e4;
 
-  --shadow-pop: 0 6px 24px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+  /* Control pane stays dark in both themes */
+  --pane-bg: #121816;
+  --pane-fg: #e8ece9;
+  --pane-muted: #8c9792;
+  --pane-line: #2c3532;
+  --pane-hover: #1d2522;
+  --pane-accent: #5fd3a5;
+  --pane-danger: #ff8f80;
+  --pane-edge: transparent;
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
+  --shadow-pop: 0 6px 24px rgba(10, 20, 15, 0.1), 0 1px 3px rgba(10, 20, 15, 0.08);
 
-  --font-sans: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+
+  /* Geologica covers every Kazakh letter and ₸; its sharpness axis cuts the terminals */
+  --font-sans: 'Geologica', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --shape-body: "SHRP" 0, "CRSV" 0;
+  --shape-sharp: "SHRP" 100, "CRSV" 0;
 
   --transition-fast: 120ms ease;
 }
 
 [data-theme="dark"] {
-  --bg-page: #121314;
-  --bg-surface: #1a1b1d;
-  --bg-subtle: #202224;
-  --bg-input: #151617;
-  --bg-hover: #26282a;
+  --bg-page: #151a18;
+  --bg-surface: #1d2421;
+  --bg-subtle: #222a27;
+  --bg-input: #111513;
+  --bg-hover: #27302c;
 
-  --border-color: #2a2c2f;
-  --border-strong: #3a3d40;
-  --border-focus: #3cc0d8;
+  --border-color: #29322e;
+  --border-strong: #3a4540;
+  --border-focus: #4fc596;
 
-  --text-primary: #ededea;
-  --text-secondary: #a8aaa6;
-  --text-muted: #7a7c79;
-  --text-inverse: #121314;
+  --text-primary: #e6ebe8;
+  --text-secondary: #a6b0ab;
+  --text-muted: #78837d;
+  --text-inverse: #101412;
 
-  --accent: #3cc0d8;
-  --accent-soft: rgba(60, 192, 216, 0.12);
-  --gold: #f2c230;
+  --accent: #4fc596;
   --danger: #e0625c;
 
-  --color-opv: #8d9094;
-  --color-vosms: #62656a;
-  --color-ipn: #45484c;
+  --flow-yours: #4fc596;
+  --flow-pension: #6c9de0;
+  --flow-state: #e07b4f;
+  --flow-total: #cfd7d3;
+  --flow-track: #212926;
+
+  --pane-bg: #0c100f;
+  --pane-line: #222b28;
+  --pane-hover: #161d1b;
+  --pane-edge: #222b28;
 
   --shadow-pop: 0 8px 28px rgba(0, 0, 0, 0.45);
 }
@@ -91,9 +111,8 @@ html {
 
 body {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   background-color: var(--bg-page);
+  font-variation-settings: var(--shape-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
@@ -107,7 +126,8 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.25;
-  color: var(--text-primary);
+  font-variation-settings: var(--shape-sharp);
+  text-wrap: balance;
 }
 
 a {
@@ -125,12 +145,6 @@ a:hover {
 button, input, select {
   font: inherit;
   color: inherit;
-}
-
-.panel {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
 }
 
 button, .preset-chip {

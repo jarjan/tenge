@@ -13,9 +13,8 @@ const params = parseCalcParams(Astro.url.searchParams);
 ---
 
 <Layout params={params}>
-  <main class="app-container">
-    <Header locale={params.locale} />
-    <Calculator params={params} />
-    <Footer locale={params.locale} />
-  </main>
+  <Calculator params={params}>
+    <Header slot="header" locale={params.locale} />
+    <Footer slot="footer" locale={params.locale} />
+  </Calculator>
 </Layout>

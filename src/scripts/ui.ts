@@ -21,6 +21,7 @@ import {
   translations,
   type SupportedLocale,
 } from "./i18n";
+import { flowBars, flowShares, formatShare } from "./flow";
 import { DEFAULT_AMOUNT, parseCalcParams, type CalcMode } from "./params";
 
 export interface AppState {
@@ -175,7 +176,7 @@ export function render(): void {
   document.querySelectorAll<HTMLButtonElement>(".preset-chip").forEach((chip) => {
     const val = Number(chip.dataset.value);
     chip.classList.toggle("active", val === state.amount);
-    if (!chip.dataset.i18n) chip.textContent = formatCurrency(val, state.locale);
+    if (!chip.dataset.i18n) chip.textContent = formatNumber(val, state.locale);
   });
 
   // 5. Update Deduction toggle
@@ -189,22 +190,17 @@ export function render(): void {
     if (el) el.textContent = text;
   };
 
-  // 7. Update Top Summary Cards (Monthly & Yearly + USD/EUR)
-  // Monthly Net
-  setText("val-monthly-net", formatCurrency(breakdown.netSalary, state.locale));
-  setText("val-monthly-net-fx", formatUsdEur(breakdown.netSalary, state.rates));
-  
-  // Yearly Net
-  setText("val-yearly-net", formatCurrency(breakdown.netSalary * 12, state.locale));
-  setText("val-yearly-net-fx", formatUsdEur(breakdown.netSalary * 12, state.rates));
-
-  // Monthly Gross
-  setText("val-monthly-gross", formatCurrency(breakdown.grossSalary, state.locale));
-  setText("val-monthly-gross-fx", formatUsdEur(breakdown.grossSalary, state.rates));
-
-  // Yearly Gross
-  setText("val-yearly-gross", formatCurrency(breakdown.grossSalary * 12, state.locale));
-  setText("val-yearly-gross-fx", formatUsdEur(breakdown.grossSalary * 12, state.rates));
+  // 7. Update headline figures: net, gross and full employer cost
+  const kpis: [string, number][] = [
+    ["net", breakdown.netSalary],
+    ["gross", breakdown.grossSalary],
+    ["employer", breakdown.totalEmployerCost],
+  ];
+  for (const [id, value] of kpis) {
+    setText(`val-monthly-${id}`, formatCurrency(value, state.locale));
+    setText(`val-monthly-${id}-fx`, formatUsdEur(value, state.rates));
+    setText(`val-yearly-${id}`, formatCurrency(value * 12, state.locale));
+  }
 
   // 8. Update Table Items (Monthly + Yearly + FX)
   const updateTableRow = (prefix: string, monthVal: number) => {
@@ -221,6 +217,7 @@ export function render(): void {
   updateTableRow("total-employee", breakdown.totalEmployeeDeductions);
 
   // Employer rows
+  updateTableRow("employer-taxes", breakdown.totalEmployerTaxes);
   updateTableRow("so", breakdown.so);
   updateTableRow("oosms", breakdown.oosms);
   updateTableRow("opvr", breakdown.opvr);
@@ -236,58 +233,28 @@ export function render(): void {
     ratesEl.textContent = `1$ ≈ ${usd} ₸ · 1€ ≈ ${eur} ₸${liveTag}`;
   }
 
-  // 10. Update Distribution Bar & Percentage Badges
-  const segNet = document.getElementById("seg-net");
-  const segOpv = document.getElementById("seg-opv");
-  const segVosms = document.getElementById("seg-vosms");
-  const segIpn = document.getElementById("seg-ipn");
-
-  const pctNet = document.getElementById("pct-net");
-  const pctOpv = document.getElementById("pct-opv");
-  const pctVosms = document.getElementById("pct-vosms");
-  const pctIpn = document.getElementById("pct-ipn");
-  const distGrossLabel = document.getElementById("dist-gross-label");
-
-  const grossVal = breakdown.grossSalary;
-  if (grossVal > 0) {
-    const netPct = (breakdown.netSalary / grossVal) * 100;
-    const opvPct = (breakdown.opv / grossVal) * 100;
-    const vosmsPct = (breakdown.vosms / grossVal) * 100;
-    const ipnPct = (breakdown.ipn / grossVal) * 100;
-
-    if (segNet) {
-      segNet.style.width = `${netPct}%`;
-      segNet.setAttribute("title", `${t.calculator.netSalary}: ${formatCurrency(breakdown.netSalary, state.locale)} (${netPct.toFixed(1)}%)`);
+  // 10. Update the money-flow waterfall and the per-100 ₸ summary line
+  for (const bar of flowBars(breakdown)) {
+    const el = document.getElementById(`bar-${bar.id}`);
+    if (el) {
+      el.style.left = `${bar.left}%`;
+      el.style.width = `${bar.width}%`;
     }
-    if (segOpv) {
-      segOpv.style.width = `${opvPct}%`;
-      segOpv.setAttribute("title", `${t.calculator.opv}: ${formatCurrency(breakdown.opv, state.locale)} (${opvPct.toFixed(1)}%)`);
-    }
-    if (segVosms) {
-      segVosms.style.width = `${vosmsPct}%`;
-      segVosms.setAttribute("title", `${t.calculator.vosms}: ${formatCurrency(breakdown.vosms, state.locale)} (${vosmsPct.toFixed(1)}%)`);
-    }
-    if (segIpn) {
-      segIpn.style.width = `${ipnPct}%`;
-      segIpn.setAttribute("title", `${t.calculator.ipn}: ${formatCurrency(breakdown.ipn, state.locale)} (${ipnPct.toFixed(1)}%)`);
-    }
+  }
 
-    if (pctNet) pctNet.textContent = `${netPct.toFixed(1)}%`;
-    if (pctOpv) pctOpv.textContent = `${opvPct.toFixed(1)}%`;
-    if (pctVosms) pctVosms.textContent = `${vosmsPct.toFixed(1)}%`;
-    if (pctIpn) pctIpn.textContent = `${ipnPct.toFixed(1)}%`;
-    if (distGrossLabel) distGrossLabel.textContent = `${formatCurrency(grossVal, state.locale)} (100%)`;
-  } else {
-    if (segNet) segNet.style.width = "100%";
-    if (segOpv) segOpv.style.width = "0%";
-    if (segVosms) segVosms.style.width = "0%";
-    if (segIpn) segIpn.style.width = "0%";
-
-    if (pctNet) pctNet.textContent = "100%";
-    if (pctOpv) pctOpv.textContent = "0%";
-    if (pctVosms) pctVosms.textContent = "0%";
-    if (pctIpn) pctIpn.textContent = "0%";
-    if (distGrossLabel) distGrossLabel.textContent = "0 ₸";
+  const thesisEl = document.getElementById("flow-thesis");
+  if (thesisEl) {
+    const shares = flowShares(breakdown);
+    thesisEl.replaceChildren(
+      ...t.calculator.flowThesis.split(/(\{net\}|\{pension\})/).map((part) => {
+        const key = part === "{net}" ? "net" : part === "{pension}" ? "pension" : null;
+        if (!key) return document.createTextNode(part);
+        const b = document.createElement("b");
+        b.className = `thesis-${key}`;
+        b.textContent = formatShare(shares[key], state.locale);
+        return b;
+      }),
+    );
   }
 
   // 11. Update Language Switcher UI

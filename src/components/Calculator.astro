@@ -8,6 +8,7 @@ import {
   formatNumber,
   formatUsdEur,
 } from "../scripts/calculator";
+import { flowBars, flowShares, formatShare, type FlowKind } from "../scripts/flow";
 import { translations } from "../scripts/i18n";
 import type { CalcParams } from "../scripts/params";
 
@@ -24,53 +25,66 @@ const b = mode === "net" ? calculateFromNet(amount, options) : calculateFromGros
 
 const money = (v: number) => formatCurrency(v, locale);
 const fx = (v: number) => formatUsdEur(v, DEFAULT_RATES);
-const pct = (v: number) => (b.grossSalary > 0 ? (v / b.grossSalary) * 100 : 0);
 
 const presets = [MIN_AMOUNT, 200000, 350000, 500000, 1000000, 2000000];
 
-const segments = [
-  { key: "net", labelKey: "netSalary", value: b.netSalary },
-  { key: "opv", labelKey: "opv", value: b.opv },
-  { key: "vosms", labelKey: "vosms", value: b.vosms },
-  { key: "ipn", labelKey: "ipn", value: b.ipn },
-] as const;
+const bars = new Map(flowBars(b).map((bar) => [bar.id, bar]));
+const shares = flowShares(b);
+const thesisParts = t.flowThesis.split(/(\{net\}|\{pension\})/).map((part) =>
+  part === "{net}"
+    ? { bold: "net", text: formatShare(shares.net, locale) }
+    : part === "{pension}"
+      ? { bold: "pension", text: formatShare(shares.pension, locale) }
+      : { bold: null, text: part },
+);
 
 type RowKey = keyof typeof t & string;
 interface Row {
   id: string;
-  tooltipId: string;
   labelKey: RowKey;
+  tooltipId?: string;
   descKey?: RowKey;
   value: number;
-  rowClass?: string;
-  valueClass?: string;
-  total?: boolean;
+  /** total: running subtotal; group: section sum; item: a single deduction */
+  type: "total" | "group" | "item";
 }
 
-const employeeRows: Row[] = [
-  { id: "net", tooltipId: "net", labelKey: "netSalary", value: b.netSalary, rowClass: "row-highlight-net", valueClass: "font-bold col-net" },
-  { id: "gross", tooltipId: "gross", labelKey: "grossSalary", value: b.grossSalary, rowClass: "row-highlight-gross", valueClass: "font-bold col-gross" },
-  { id: "opv", tooltipId: "opv", labelKey: "opv", descKey: "opvDesc", value: b.opv },
-  { id: "vosms", tooltipId: "vosms", labelKey: "vosms", descKey: "vosmsDesc", value: b.vosms },
-  { id: "ipn", tooltipId: "ipn", labelKey: "ipn", descKey: "ipnDesc", value: b.ipn },
-  { id: "total-employee", tooltipId: "totalEmployee", labelKey: "totalEmployeeTaxes", value: b.totalEmployeeDeductions, rowClass: "row-total", valueClass: "font-bold col-tax", total: true },
+// Top to bottom: what the employer spends, what it pays on top, gross, what is withheld, take-home
+const rows: Row[] = [
+  { id: "total-employer-cost", tooltipId: "totalEmployer", labelKey: "totalEmployerCost", value: b.totalEmployerCost, type: "total" },
+  { id: "employer-taxes", labelKey: "employerSectionTitle", value: b.totalEmployerTaxes, type: "group" },
+  { id: "sn", tooltipId: "sn", labelKey: "sn", value: b.sn, type: "item" },
+  { id: "so", tooltipId: "so", labelKey: "so", value: b.so, type: "item" },
+  { id: "oosms", tooltipId: "oosms", labelKey: "oosms", value: b.oosms, type: "item" },
+  { id: "opvr", tooltipId: "opvr", labelKey: "opvr", value: b.opvr, type: "item" },
+  { id: "gross", tooltipId: "gross", labelKey: "grossSalary", value: b.grossSalary, type: "total" },
+  { id: "total-employee", tooltipId: "totalEmployee", labelKey: "employeeSectionTitle", value: b.totalEmployeeDeductions, type: "group" },
+  { id: "opv", tooltipId: "opv", labelKey: "opv", descKey: "opvDesc", value: b.opv, type: "item" },
+  { id: "vosms", tooltipId: "vosms", labelKey: "vosms", descKey: "vosmsDesc", value: b.vosms, type: "item" },
+  { id: "ipn", tooltipId: "ipn", labelKey: "ipn", descKey: "ipnDesc", value: b.ipn, type: "item" },
+  { id: "net", tooltipId: "net", labelKey: "netSalary", value: b.netSalary, type: "total" },
 ];
 
-const employerRows: Row[] = [
-  { id: "so", tooltipId: "so", labelKey: "so", value: b.so },
-  { id: "oosms", tooltipId: "oosms", labelKey: "oosms", value: b.oosms },
-  { id: "opvr", tooltipId: "opvr", labelKey: "opvr", value: b.opvr },
-  { id: "sn", tooltipId: "sn", labelKey: "sn", value: b.sn },
-  { id: "total-employer-cost", tooltipId: "totalEmployer", labelKey: "totalEmployerCost", value: b.totalEmployerCost, rowClass: "row-total row-employer-total", valueClass: "font-bold col-employer", total: true },
+const legend: { kind: FlowKind; key: RowKey }[] = [
+  { kind: "yours", key: "legendYours" },
+  { kind: "pension", key: "legendPension" },
+  { kind: "state", key: "legendState" },
 ];
+
+const kpis = [
+  { id: "net", labelKey: "monthlyNet", value: b.netSalary },
+  { id: "gross", labelKey: "monthlyGross", value: b.grossSalary },
+  { id: "employer", labelKey: "totalEmployerCost", value: b.totalEmployerCost },
+] as const;
 
 const ratesText = `1$ ≈ ${formatNumber(DEFAULT_RATES.usd, locale)} ₸ · 1€ ≈ ${formatNumber(DEFAULT_RATES.eur, locale)} ₸`;
 ---
 
-<div class="calculator-layout">
-  <!-- Input Hero Section -->
-  <section class="input-card panel" aria-labelledby="input-help-text">
-    <div class="mode-selector-group">
+<div class="app-shell">
+  <aside class="control-pane">
+    <slot name="header" />
+
+    <section class="controls" aria-labelledby="input-help-text">
       <div class="mode-pills" role="radiogroup" aria-label={t.directionLabel}>
         <button
           id="mode-btn-net"
@@ -93,68 +107,49 @@ const ratesText = `1$ ≈ ${formatNumber(DEFAULT_RATES.usd, locale)} ₸ · 1€
           {t.grossMode}
         </button>
       </div>
-    </div>
 
-    <div class="salary-input-wrapper">
-      <label for="salary-input" id="input-help-text" class="salary-input-label">
-        {mode === "net" ? t.netInputHelp : t.grossInputHelp}
-      </label>
-      <div class="input-field-container">
-        <input
-          id="salary-input"
-          class="main-salary-input"
-          type="text"
-          inputmode="numeric"
-          placeholder={formatNumber(350000, locale)}
-          value={formatNumber(amount, locale)}
-          autocomplete="off"
-          aria-describedby="min-salary-warning"
-          autofocus
-        />
-        <span class="currency-badge" aria-hidden="true">₸</span>
+      <div class="salary-input-wrapper">
+        <label for="salary-input" id="input-help-text" class="pane-label">
+          {mode === "net" ? t.netInputHelp : t.grossInputHelp}
+        </label>
+        <div class="input-field-container">
+          <input
+            id="salary-input"
+            class="main-salary-input"
+            type="text"
+            inputmode="numeric"
+            placeholder={formatNumber(350000, locale)}
+            value={formatNumber(amount, locale)}
+            autocomplete="off"
+            aria-describedby="min-salary-warning"
+            autofocus
+          />
+          <span class="currency-badge" aria-hidden="true">₸</span>
+        </div>
+        <div id="min-salary-warning" class="min-salary-hint" style="display: none;" role="status">
+          <span data-i18n="calculator.minSalaryWarning">{t.minSalaryWarning}</span>
+        </div>
       </div>
-      <div id="min-salary-warning" class="min-salary-hint" style="display: none;" role="status">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <span data-i18n="calculator.minSalaryWarning">{t.minSalaryWarning}</span>
+
+      <div class="presets-row">
+        {presets.map((value) =>
+          value === MIN_AMOUNT ? (
+            <button
+              class:list={["preset-chip", { active: value === amount }]}
+              type="button"
+              data-value={value}
+              data-i18n="calculator.mzpPresetLabel"
+            >
+              {t.mzpPresetLabel}
+            </button>
+          ) : (
+            <button class:list={["preset-chip", { active: value === amount }]} type="button" data-value={value}>
+              {formatNumber(value, locale)}
+            </button>
+          ),
+        )}
       </div>
-    </div>
 
-    <!-- Quick Presets -->
-    <div class="presets-row">
-      {presets.map((value) =>
-        value === MIN_AMOUNT ? (
-          <button
-            class:list={["preset-chip", { active: value === amount }]}
-            type="button"
-            data-value={value}
-            data-i18n="calculator.mzpPresetLabel"
-          >
-            {t.mzpPresetLabel}
-          </button>
-        ) : (
-          <button class:list={["preset-chip", { active: value === amount }]} type="button" data-value={value}>
-            {money(value)}
-          </button>
-        ),
-      )}
-    </div>
-
-    <!-- Deduction Toggle -->
-    <div class="inline-options">
       <label class="toggle-label" for="deduction-toggle">
         <input id="deduction-toggle" class="toggle-checkbox" type="checkbox" checked={useDeduction} />
         <span class="toggle-text">
@@ -162,191 +157,117 @@ const ratesText = `1$ ≈ ${formatNumber(DEFAULT_RATES.usd, locale)} ₸ · 1€
           <span class="toggle-hint" data-i18n="calculator.deductionHint">{t.deductionHint}</span>
         </span>
       </label>
-    </div>
-  </section>
+    </section>
+  </aside>
 
-  <!-- Key Results Summary Cards: Monthly & Yearly + USD/EUR -->
-  <section class="summary-duo-grid" aria-label={t.monthlyNet}>
-    <!-- Net Salary Card -->
-    <div class="summary-card net-card panel">
-      <div class="card-top">
-        <span class="card-label" data-i18n="calculator.monthlyNet">{t.monthlyNet}</span>
-      </div>
-      <div id="val-monthly-net" class="primary-amount" aria-live="polite">{money(b.netSalary)}</div>
-      <div id="val-monthly-net-fx" class="fx-amount">{fx(b.netSalary)}</div>
+  <main class="results-pane">
+    <section class="kpi-row" aria-label={t.monthlyNet}>
+      {kpis.map(({ id, labelKey, value }) => (
+        <div class={`kpi kpi-${id}`}>
+          <span class="kpi-label" data-i18n={`calculator.${labelKey}`}>{t[labelKey] as string}</span>
+          <span id={`val-monthly-${id}`} class="kpi-value" aria-live={id === "net" ? "polite" : undefined}>{money(value)}</span>
+          <span class="kpi-sub">
+            <span id={`val-yearly-${id}`}>{money(value * 12)}</span>
+            <span data-i18n="calculator.perYearShort">{t.perYearShort}</span>
+          </span>
+          <span id={`val-monthly-${id}-fx`} class="kpi-sub">{fx(value)}</span>
+        </div>
+      ))}
+    </section>
 
-      <div class="card-yearly-divider"></div>
+    <p id="flow-thesis" class="flow-thesis">
+      {thesisParts.map((part) => (part.bold ? <b class={`thesis-${part.bold}`}>{part.text}</b> : part.text))}
+    </p>
 
-      <div class="yearly-block">
-        <div class="yearly-title" data-i18n="calculator.yearlyNet">{t.yearlyNet}</div>
-        <div class="yearly-val-group">
-          <span id="val-yearly-net" class="yearly-val">{money(b.netSalary * 12)}</span>
-          <span id="val-yearly-net-fx" class="yearly-fx">{fx(b.netSalary * 12)}</span>
+    <section class="flow-section" aria-labelledby="flow-title">
+      <div class="flow-head">
+        <h2 id="flow-title" class="flow-title" data-i18n="calculator.flowTitle">{t.flowTitle}</h2>
+        <div class="flow-legend">
+          {legend.map(({ kind, key }) => (
+            <span class="legend-item">
+              <i class={`legend-swatch kind-${kind}`} aria-hidden="true"></i>
+              <span data-i18n={`calculator.${key}`}>{t[key] as string}</span>
+            </span>
+          ))}
         </div>
       </div>
-    </div>
 
-    <!-- Gross Salary Card -->
-    <div class="summary-card gross-card panel">
-      <div class="card-top">
-        <span class="card-label" data-i18n="calculator.monthlyGross">{t.monthlyGross}</span>
+      <table class="flow-table">
+        <thead>
+          <tr>
+            <th class="col-item" data-i18n="calculator.colItem">{t.colItem}</th>
+            <th class="col-bar" aria-hidden="true"></th>
+            <th class="col-num" data-i18n="calculator.colMonth">{t.colMonth}</th>
+            <th class="col-num col-year" data-i18n="calculator.colYear">{t.colYear}</th>
+            <th class="col-num col-fx" data-i18n="calculator.colFx">{t.colFx}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => {
+            const bar = bars.get(row.id);
+            const sign = row.type === "total" ? "" : "minus";
+            return (
+              <tr class={`flow-row row-${row.type} row-${row.id}`}>
+                <td class="col-item">
+                  {row.tooltipId ? (
+                    <span class="tax-term-info" data-tooltip-id={row.tooltipId} tabindex="0" role="button">
+                      <span data-i18n={`calculator.${row.labelKey}`}>{t[row.labelKey] as string}</span>
+                    </span>
+                  ) : (
+                    <span data-i18n={`calculator.${row.labelKey}`}>{t[row.labelKey] as string}</span>
+                  )}
+                  {row.descKey && (
+                    <div class="cell-subtitle" data-i18n={`calculator.${row.descKey}`}>{t[row.descKey] as string}</div>
+                  )}
+                </td>
+                <td class:list={["col-bar", { "no-bar": !bar }]} aria-hidden="true">
+                  {bar && (
+                    <div class="flow-track">
+                      <i
+                        id={`bar-${row.id}`}
+                        class={`flow-bar kind-${bar.kind}`}
+                        style={`left: ${bar.left}%; width: ${bar.width}%;`}
+                      ></i>
+                    </div>
+                  )}
+                </td>
+                <td id={`val-m-${row.id}`} class={`col-num ${sign}`}>{money(row.value)}</td>
+                <td id={`val-y-${row.id}`} class={`col-num col-year ${sign}`}>{money(row.value * 12)}</td>
+                <td id={`val-fx-${row.id}`} class="col-num col-fx">{fx(row.value)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="actions-card">
+      <div class="actions-row">
+        <button id="btn-copy-summary" class="action-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span data-i18n="calculator.actions.copySummary">{t.actions.copySummary}</span>
+        </button>
+        <button id="btn-share-link" class="action-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+          <span data-i18n="calculator.actions.shareLink">{t.actions.shareLink}</span>
+        </button>
       </div>
-      <div id="val-monthly-gross" class="primary-amount" aria-live="polite">{money(b.grossSalary)}</div>
-      <div id="val-monthly-gross-fx" class="fx-amount">{fx(b.grossSalary)}</div>
-
-      <div class="card-yearly-divider"></div>
-
-      <div class="yearly-block">
-        <div class="yearly-title" data-i18n="calculator.yearlyGross">{t.yearlyGross}</div>
-        <div class="yearly-val-group">
-          <span id="val-yearly-gross" class="yearly-val">{money(b.grossSalary * 12)}</span>
-          <span id="val-yearly-gross-fx" class="yearly-fx">{fx(b.grossSalary * 12)}</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Distribution Track -->
-  <section class="distribution-card panel" aria-label={t.distributionTitle}>
-    <div class="distribution-header">
-      <span class="distribution-title">
-        <span data-i18n="calculator.distributionTitle">{t.distributionTitle}</span>
+      <span id="rates-disclaimer-text" class="rates-disclaimer">
+        {ratesText}
       </span>
-      <span id="dist-gross-label" class="distribution-gross-val font-mono">{money(b.grossSalary)} (100%)</span>
-    </div>
+    </section>
 
-    <div class="distribution-track" aria-hidden="true">
-      {segments.map(({ key, labelKey, value }) => (
-        <div
-          id={`seg-${key}`}
-          class={`dist-segment ${key}`}
-          style={`width: ${pct(value)}%;`}
-          title={`${t[labelKey]}: ${money(value)} (${pct(value).toFixed(1)}%)`}
-        />
-      ))}
-    </div>
-
-    <div class="distribution-legend">
-      {segments.map(({ key, labelKey, value }) => (
-        <div class={`legend-item legend-${key}`}>
-          <span class={`legend-dot ${key}`}></span>
-          <span class="legend-name" data-i18n={`calculator.${labelKey}`}>{t[labelKey]}</span>
-          <span id={`pct-${key}`} class="legend-pct">{pct(value).toFixed(1)}%</span>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Unified Breakdown Table -->
-  <section class="breakdown-card panel" aria-label={t.colItem}>
-    <table class="simple-table">
-      <thead>
-        <tr>
-          <th data-i18n="calculator.colItem">{t.colItem}</th>
-          <th class="text-right" data-i18n="calculator.colMonth">{t.colMonth}</th>
-          <th class="text-right" data-i18n="calculator.colYear">{t.colYear}</th>
-          <th class="text-right" data-i18n="calculator.colFx">{t.colFx}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {employeeRows.map((row) => (
-          <tr class={row.rowClass}>
-            <td>
-              <div class="cell-title">
-                <span class="tax-term-info" data-tooltip-id={row.tooltipId} tabindex="0" role="button">
-                  {row.total ? (
-                    <strong data-i18n={`calculator.${row.labelKey}`}>{t[row.labelKey] as string}</strong>
-                  ) : (
-                    <span data-i18n={`calculator.${row.labelKey}`}>{t[row.labelKey] as string}</span>
-                  )}
-                  <span class="info-icon-badge" aria-hidden="true">?</span>
-                </span>
-              </div>
-              {row.descKey && (
-                <div class="cell-subtitle" data-i18n={`calculator.${row.descKey}`}>{t[row.descKey] as string}</div>
-              )}
-            </td>
-            <td id={`val-m-${row.id}`} class={`text-right font-mono ${row.valueClass ?? ""}`}>{money(row.value)}</td>
-            <td id={`val-y-${row.id}`} class={`text-right font-mono ${row.valueClass ?? ""}`}>{money(row.value * 12)}</td>
-            <td id={`val-fx-${row.id}`} class="text-right font-mono text-muted">{fx(row.value)}</td>
-          </tr>
-        ))}
-      </tbody>
-
-      <!-- Employer Contributions Section -->
-      <tbody id="employer-rows-container">
-        <tr class="section-header-row">
-          <td colspan="4" class="section-header-cell">
-            <span data-i18n="calculator.employerSectionTitle">{t.employerSectionTitle}</span>
-          </td>
-        </tr>
-        {employerRows.map((row) => (
-          <tr class={row.rowClass}>
-            <td>
-              <div class="cell-title">
-                <span class="tax-term-info" data-tooltip-id={row.tooltipId} tabindex="0" role="button">
-                  {row.total ? (
-                    <strong data-i18n={`calculator.${row.labelKey}`}>{t[row.labelKey] as string}</strong>
-                  ) : (
-                    <span data-i18n={`calculator.${row.labelKey}`}>{t[row.labelKey] as string}</span>
-                  )}
-                  <span class="info-icon-badge" aria-hidden="true">?</span>
-                </span>
-              </div>
-            </td>
-            <td id={`val-m-${row.id}`} class={`text-right font-mono ${row.valueClass ?? ""}`}>{money(row.value)}</td>
-            <td id={`val-y-${row.id}`} class={`text-right font-mono ${row.valueClass ?? ""}`}>{money(row.value * 12)}</td>
-            <td id={`val-fx-${row.id}`} class="text-right font-mono text-muted">{fx(row.value)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </section>
-
-  <!-- Quick Actions & Rates Note -->
-  <section class="actions-card">
-    <div class="actions-row">
-      <button id="btn-copy-summary" class="action-btn" type="button">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-          ></path>
-        </svg>
-        <span data-i18n="calculator.actions.copySummary">{t.actions.copySummary}</span>
-      </button>
-      <button id="btn-share-link" class="action-btn" type="button">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="18" cy="5" r="3"></circle>
-          <circle cx="6" cy="12" r="3"></circle>
-          <circle cx="18" cy="19" r="3"></circle>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-        </svg>
-        <span data-i18n="calculator.actions.shareLink">{t.actions.shareLink}</span>
-      </button>
-    </div>
-    <span id="rates-disclaimer-text" class="rates-disclaimer">
-      {ratesText}
-    </span>
-  </section>
+    <slot name="footer" />
+  </main>
 
   <!-- Contextual Floating Tooltip Popover (Anchored, Direct Body Portal) -->
   <div
@@ -366,7 +287,6 @@ const ratesText = `1$ ≈ ${formatNumber(DEFAULT_RATES.usd, locale)} ₸ · 1€
       >
       <code id="popover-formula" class="tooltip-formula font-mono"></code>
     </div>
-    <div class="tooltip-arrow" aria-hidden="true"></div>
   </div>
 </div>
 

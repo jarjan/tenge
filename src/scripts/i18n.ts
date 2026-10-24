@@ -52,6 +52,13 @@ export interface LocaleContent {
 
     toggleEmployer: string;
     employerSectionTitle: string;
+    employeeSectionTitle: string;
+    flowTitle: string;
+    // Uses {net} and {pension} placeholders, filled per 100 ₸ of employer cost
+    flowThesis: string;
+    legendYours: string;
+    legendPension: string;
+    legendState: string;
     formulaLabel: string;
 
     // Line items
@@ -186,6 +193,12 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       toggleEmployer: "Жұмыс берушінің шығындарын көрсету",
       employerSectionTitle: "Жұмыс берушінің қосымша салықтары",
+      employeeSectionTitle: "Жалақыдан ұсталады",
+      flowTitle: "Ақша қайда кетеді",
+      flowThesis: "Жұмыс беруші сізге жұмсайтын әр 100 теңгеден {net} ₸ картаңызға түседі, {pension} ₸ зейнетақы шотыңызға аударылады.",
+      legendYours: "Картаңызға",
+      legendPension: "Зейнетақы шотыңызға",
+      legendState: "Мемлекет пен қорларға",
       formulaLabel: "Есептеу формуласы:",
 
       netSalary: "Қолға (Net)",
@@ -333,6 +346,12 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       toggleEmployer: "Показать налоги работодателя",
       employerSectionTitle: "Налоги и отчисления работодателя",
+      employeeSectionTitle: "Удерживается из зарплаты",
+      flowTitle: "Куда уходят деньги",
+      flowThesis: "Из каждых 100 ₸, которые работодатель тратит на вас, {net} ₸ доходит до вашей карты, а {pension} ₸ уходит на ваш пенсионный счёт.",
+      legendYours: "На вашу карту",
+      legendPension: "На ваш пенсионный счёт",
+      legendState: "Государству и в фонды",
       formulaLabel: "Формула расчета:",
 
       netSalary: "На руки (Net)",
@@ -480,6 +499,12 @@ export const translations: Record<SupportedLocale, LocaleContent> = {
 
       toggleEmployer: "Show employer payroll taxes",
       employerSectionTitle: "Employer Contributions & Taxes",
+      employeeSectionTitle: "Withheld from your salary",
+      flowTitle: "Where the money goes",
+      flowThesis: "Of every 100 ₸ your employer spends on you, {net} ₸ reaches your card and {pension} ₸ goes to your pension account.",
+      legendYours: "To your card",
+      legendPension: "To your pension account",
+      legendState: "To the state and social funds",
       formulaLabel: "Calculation formula:",
 
       netSalary: "Take-Home (Net)",
